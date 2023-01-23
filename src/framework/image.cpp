@@ -323,8 +323,31 @@ void Image::DrawLineDDA(int x0, int y0, int x1, int y1, const Color& c) {
 
 //TODO:Create a method in the Image class that draws lines using the efficient Bresenham lines algorithm (L1-3.2)
 void Image::DrawLineBresenham(int x0, int y0, int x1, int y1, const Color& c) {
-	//First Octant
+	//1st Octant
 
+	int dx = abs(x1 - x0);
+	int dy = abs(y1 - y0);
+	int inc_E = 2 * dy;
+	int inc_NE = 2 * (dy - dx);
+	int d = 2 * dy - dx;
+	int x = x0;
+	int y = y0;
+	SetPixel(x0, y0, c);
+
+	int dir_Y = (y0 > y1) ? -1 : 1;	//8th octant
+
+	while (x < x1) {
+		if (d <= 0) {
+			d = d + inc_E;
+			x = x + 1;
+		}
+		else {
+			d = d + inc_NE;
+			x = x + 1;
+			y = y + dir_Y;
+		}
+		SetPixel(x, y, c);
+	}
 
 }
 
