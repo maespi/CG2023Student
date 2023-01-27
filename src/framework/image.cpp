@@ -273,7 +273,8 @@ bool Image::SaveTGA(const char* filename)
 {
 	unsigned char TGAheader[12] = {0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-	FILE *file = fopen(filename, "wb");
+	std::string fullPath = absResPath(filename);
+	FILE *file = fopen(fullPath.c_str(), "wb");
 	if ( file == NULL )
 	{
 		perror("Failed to open file: ");
@@ -295,7 +296,7 @@ bool Image::SaveTGA(const char* filename)
 	for(unsigned int y = 0; y < height; ++y)
 		for(unsigned int x = 0; x < width; ++x)
 		{
-			Color c = pixels[(height-y-1)*width+x];
+			Color c = pixels[y*width+x];
 			unsigned int pos = (y*width+x)*3;
 			bytes[pos+2] = c.r;
 			bytes[pos+1] = c.g;
@@ -304,7 +305,16 @@ bool Image::SaveTGA(const char* filename)
 
 	fwrite(bytes, 1, width*height*3, file);
 	fclose(file);
+
 	return true;
+}
+
+void Image::DrawRect(int x, int y, int w, int h, const Color& c)
+{
+	for (int i = 0; i < w; ++i) {
+		SetPixel(x + i, y, c);
+		SetPixel(x + i, y + h, c);
+  }
 }
 
 //TODO: Create a function in the Image class that draws lines using the DDA algorithm (L1-3.1)
@@ -323,32 +333,43 @@ void Image::DrawLineDDA(int x0, int y0, int x1, int y1, const Color& c) {
 
 //TODO:Create a method in the Image class that draws lines using the efficient Bresenham lines algorithm (L1-3.2)
 void Image::DrawLineBresenham(int x0, int y0, int x1, int y1, const Color& c) {
-	//1st Octant
+
+	//To flip the start-end points to calculate only octants 1,2,7,8
+	if (x0 >= x1) {
+		std::swap(x0, x1);
+		std::swap(y0, y1);
+	}
 
 	int dx = abs(x1 - x0);
 	int dy = abs(y1 - y0);
-	int inc_E = 2 * dy;
-	int inc_NE = 2 * (dy - dx);
+	int inc_U = 2 * dy - 1; // Add - 1 to avoid non value of variable (It locks x0 = x1 printing points)
+	int inc_M = 2 * (dy - dx);
 	int d = 2 * dy - dx;
 	int x = x0;
 	int y = y0;
 	SetPixel(x0, y0, c);
 
-	int dir_Y = (y0 > y1) ? -1 : 1;	//8th octant
+	bool main_axis_Y = false; // To detect if dy > dx and so octant 2
 
-	while (x < x1) {
-		if (d <= 0) {
-			d = d + inc_E;
-			x = x + 1;
+	//Recalculate variables with base in dy in case of dy > dx
+	if (dy > dx) {
+		main_axis_Y = true;
+		inc_U = (2 * dx);
+		inc_M = 2 * (dx - dy);
+		d = 2 * dx - dy;
+	}
+
+	int dir_Y = (y0 > y1) ? -1 : 1;    //To flip between octants 1,2 to 7,8
+
+
 		}
 		else {
-			d = d + inc_NE;
+			d = d + inc_M;
 			x = x + 1;
 			y = y + dir_Y;
 		}
 		SetPixel(x, y, c);
 	}
-
 }
 
 #ifndef IGNORE_LAMBDAS
