@@ -49,14 +49,14 @@ void Entity::Render(Image* framebuffer, Camera* camera, const Color& c) {
 		//Convert clip space positions to screen space
 		if (!negZ1 && !negZ2 && !negZ3) {
 
-			v1.x = v1.x * (framebuffer->width - 1);
-			v1.y = v1.y * (framebuffer->height - 1);
+			v1.x = (v1.x+1) / 2 * (framebuffer->width - 1);
+			v1.y = (v1.y+1) / 2 * (framebuffer->height - 1);
 
-			v2.x = v2.x * (framebuffer->width - 1);
-			v2.y = v2.y * (framebuffer->height - 1);
+			v2.x = (v2.x+1) / 2 * (framebuffer->width - 1);
+			v2.y = (v2.y+1) / 2 * (framebuffer->height - 1);
 
-			v3.x = v3.x * (framebuffer->width - 1);
-			v3.y = v3.y * (framebuffer->height - 1);
+			v3.x = (v3.x+1) / 2 * (framebuffer->width - 1);
+			v3.y = (v3.y+1) / 2 * (framebuffer->height - 1);
 
 			//Set Line Bresenham to buffer
 			framebuffer->DrawLineBresenham(v1.x, v1.y, v2.x, v2.y, c);
@@ -70,11 +70,12 @@ void Entity::Render(Image* framebuffer, Camera* camera, const Color& c) {
 void Entity::Update(float sec, int type){
     if (type == 1){//vermella
         
-        model.Translate(-sec/30,0,0);
+        model.Translate(-sec/15,0,0);
+        //model.Scale(sec/1000000);
 
         
     } else if (type == 2){//blava
-        model.Rotate(sec, Vector3(0.5,1,2));
+        model.Rotate(sec, Vector3(0,sec,2));
 
     } else if(type == 3){//blanca
         float c = std::fmod(sec, 180);
@@ -84,7 +85,7 @@ void Entity::Update(float sec, int type){
         model.M[2][0] = model.M[2][0] * sin(c);
         model.M[2][2] = model.M[2][2] * cos(c);
         
-        model.Rotate(sec, Vector3(model.M[0][0], model.M[1][0]+sec, model.M[2][0]));
+        model.Rotate(sec, Vector3(model.M[0][0], model.M[1][0], model.M[2][0]));
 
     }
      

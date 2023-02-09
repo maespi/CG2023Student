@@ -7,6 +7,11 @@
 std::vector<Entity*> entities;
 std::vector<Color> entities_color;
 Camera c;
+int type_c = 1;
+Vector3 lukat_x = Vector3(0, 0, 1);
+int near= 0;
+int far = 0;
+
 
 //if you de-comment the lines: 32,38,45 you'll se the animation.
 Application::Application(const char* caption, int width, int height)
@@ -34,6 +39,8 @@ void Application::Init(void)
 {
     std::cout << "Initiating app..." << std::endl;
 
+    
+    
     Mesh* mesh1 = new Mesh();
     mesh1->LoadOBJ("../res/meshes/lee.obj");
     Mesh* mesh2 = new Mesh();
@@ -56,7 +63,7 @@ void Application::Init(void)
 
     c = Camera();
     c.SetPerspective(45, 1, .01, 100);
-    c.LookAt(Vector3(0, 0, 1), Vector3(0, 0, 0), Vector3::UP);
+    c.LookAt(lukat_x, Vector3(near, 0, 0), Vector3::UP);
 }
 
 // Render one frame
@@ -66,15 +73,16 @@ void Application::Render(void)
     for (int i = 0; i < entities.size(); i++) {
         entities[i]->Render(&framebuffer, &c, (entities_color[i]));
     }
+
     framebuffer.Render();
 }
 
 // Called after render
 void Application::Update(float seconds_elapsed){
     
-    entities[0]->Update(seconds_elapsed,1);
-    entities[1]->Update(seconds_elapsed,2);
-    entities[2]->Update(seconds_elapsed,3);
+    for (int i = 0; i < entities.size(); i++) {
+        entities[i]->Update(seconds_elapsed,i+1);
+    }
 
     framebuffer.Fill(Color::BLACK);
 }
@@ -88,18 +96,30 @@ void Application::OnKeyPressed( SDL_KeyboardEvent event )
     
     // KEY CODES: https://wiki.libsdl.org/SDL2/SDL_Keycode
     switch(event.keysym.sym) {
-        case SDLK_1:
-            framebuffer.DrawLineDDA(100, 100, 200, 300, Color::YELLOW);
+        case SDLK_RIGHT:
+            c.center.x += 0.05;
+            c.UpdateViewMatrix();
+
             break;
-        case SDLK_2:
-            framebuffer.DrawLineBresenham(1000, 300, 1000 + 200 * cos(time * 3), 300 + 200 * sin(time * 3), Color(r, g, b));
+        case SDLK_LEFT:
+            c.center.x -= 0.05;
+            c.UpdateViewMatrix();
+
             break;
-        case SDLK_3:
-            framebuffer.DrawCircle(500, 500, 100, Color::WHITE, true);
+        case SDLK_UP:
+            c.center.y += 0.05;
+            c.UpdateViewMatrix();
+
             break;
-        case SDLK_4:
-            framebuffer.Fill(Color::BLACK);
+        case SDLK_DOWN:
+            c.center.y -= 0.05;
+            c.UpdateViewMatrix();
+
             break;
+        case SDLK_c: //To lock camera
+            type_c *= -1;
+            break;
+            
         case SDLK_ESCAPE:
             exit(0);
             break; // ESC key, kill the app
@@ -122,10 +142,11 @@ void Application::OnMouseButtonUp( SDL_MouseButtonEvent event )
 
 void Application::OnMouseMove(SDL_MouseButtonEvent event)
 {
-    
+    if (type_c == 1){
+        c.Move(Vector3(-mouse_delta.x*0.01,mouse_delta.y*0.01,0));
+    }
 }
 
-void Application::OnFileChanged(const char* filename)
-{
+void Application::OnFileChanged(const char* filename){
     Shader::ReloadSingleShader(filename);
 }

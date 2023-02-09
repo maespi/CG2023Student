@@ -207,9 +207,10 @@ void Matrix44::SetTranslation(float x, float y, float z)
 
 void Matrix44::SetScale(float a){
     SetIdentity();
-    m[12] *= a;
-    m[13] *= a;
-    m[14] *= a;
+    M[0][0] *= a;
+    M[1][1] *= a;
+    M[2][2] *= a;
+    M[3][3] *= a;
 }
 
 //To create a rotation matrix
