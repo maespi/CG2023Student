@@ -143,11 +143,7 @@ void Matrix44::SetIdentity()
 	m[3]=0; m[7]=0; m[11]=0; m[15]=1;
 }
 
-void Matrix44::SetScale(float a){
-    m[12] *= a;
-    m[13] *= a;
-    m[14] *= a;
-}
+
 
 void Matrix44::Transpose()
 {
@@ -156,8 +152,10 @@ void Matrix44::Transpose()
 }
 
 void Matrix44::Scale(float a){
+    
     Matrix44 M;
     M.SetScale(a);
+    *this = *this * M;
     
 }
 
@@ -205,6 +203,13 @@ void Matrix44::SetTranslation(float x, float y, float z)
 	m[12] = x;
 	m[13] = y;
 	m[14] = z;
+}
+
+void Matrix44::SetScale(float a){
+    SetIdentity();
+    m[12] *= a;
+    m[13] *= a;
+    m[14] *= a;
 }
 
 //To create a rotation matrix

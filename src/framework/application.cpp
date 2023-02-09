@@ -72,6 +72,9 @@ void Application::Render(void)
 // Called after render
 void Application::Update(float seconds_elapsed){
     entities[0]->Update(seconds_elapsed);
+    entities[1]->Update(seconds_elapsed);
+    entities[2]->Update(seconds_elapsed);
+
     framebuffer.Fill(Color::BLACK);
 }
 

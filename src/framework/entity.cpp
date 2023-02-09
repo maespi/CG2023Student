@@ -69,14 +69,27 @@ void Entity::Render(Image* framebuffer, Camera* camera, const Color& c) {
 
 void Entity::Update(float sec)
 {
-	/*float c = std::fmod(sec, 180);
+	float c = std::fmod(sec, 180);
 	model.M[0][0] = model.M[0][0] * cos(c);
 	model.M[0][2] = model.M[0][2] * -sin(c);
 	model.M[2][0] = model.M[2][0] * sin(c);
-	model.M[2][2] = model.M[2][2] * cos(c);*/
+	model.M[2][2] = model.M[2][2] * cos(c);
 
-	//model.SetRotation(sec, Vector3(model.M[0][0], model.M[1][0], model.M[2][0]));
-	model.SetTranslation(0, 0.001,0);
+
+    
+    for (int i = 0;i<1000;i++){
+        model.Rotate(sec/93, Vector3(model.M[0][0], model.M[1][0], model.M[2][0]));
+        model.Scale(sec*100);
+    }
+    
+    for (int i = 0;i<1000;i++){
+        model.Rotate(-sec/93, Vector3(model.M[0][0], model.M[1][0], model.M[2][0]));
+        model.Scale(-sec*2);
+    }
+	//model.SetTranslation(0, 0.001,0);
+    //model.Rotate(sec, Vector3(0,sec,0));
+    //model.Rotate(sec*10, Vector3(0,0,sec));
+    //model.Scale(sec*100);
 
 }
 
