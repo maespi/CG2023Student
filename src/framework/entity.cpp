@@ -36,10 +36,28 @@ void Entity::Render(Image* framebuffer, Camera* camera, const Color& c) {
 		Vector3 v1 = vertices[i];
 		Vector3 v2 = vertices[i+1];
 		Vector3 v3 = vertices[i+2];
+
 		//Transforma local to World
 		v1 = model * v1;
 		v2 = model * v2;
 		v3 = model * v3;
+
+		/*std::cout << model._11 << std::endl;
+		std::cout << model._12 << std::endl;
+		std::cout << model._13 << std::endl;
+		std::cout << model._14 << std::endl;
+		std::cout << model._21 << std::endl;
+		std::cout << model._22 << std::endl;
+		std::cout << model._23 << std::endl;
+		std::cout << model._24 << std::endl;
+		std::cout << model._31 << std::endl;
+		std::cout << model._32 << std::endl;
+		std::cout << model._33 << std::endl;
+		std::cout << model._34 << std::endl;
+		std::cout << model._41 << std::endl;
+		std::cout << model._42 << std::endl;
+		std::cout << model._43 << std::endl;
+		std::cout << model._44 << std::endl;*/
 
 		//World Space to Clip Space
 		//Calculates if z is outside the camera

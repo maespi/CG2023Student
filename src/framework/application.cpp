@@ -37,23 +37,24 @@ void Application::Init(void)
     Mesh* mesh = new Mesh();
     mesh->LoadOBJ("../res/meshes/lee.obj");
 
-    Entity* e = new Entity(mesh);
-    Camera c = Camera();
-    e->model.TranslateLocal(.1, .1, -1);
-    c.SetPerspective(45, 1, 0, 100);
-    //c.Move(Vector3(0,0,0));
+    e = new Entity(mesh);
+    c = Camera();
+    //e->model.TranslateLocal(0, 0, -.8);
+    c.SetPerspective(65, 1, .01, 100);
+    //c.LookAt(Vector3(0, 0, 1), Vector3(0, 0, -1), Vector3::UP);
+    //c.Move(Vector3(0,0,-.5));
     e->Render(&framebuffer, &c, Color::WHITE);
-    std::cout << c.eye.x << std::endl;
-    std::cout << c.eye.y << std::endl;
-    std::cout << c.eye.z << std::endl;
+    framebuffer.Render();
 
+    /*std::cout << c.eye.x << std::endl;
+    std::cout << c.eye.y << std::endl;
+    std::cout << c.eye.z << std::endl;*/
 }
 
 // Render one frame
 void Application::Render(void)
 {
     e->Render(&framebuffer, &c, Color::WHITE);
-
     framebuffer.Render();
     
 }
@@ -62,8 +63,6 @@ void Application::Render(void)
 void Application::Update(float seconds_elapsed){
     //e->Update(seconds_elapsed);
     //framebuffer.Fill(Color::BLACK);
-    
-    
 }
 
 //keyboard press event

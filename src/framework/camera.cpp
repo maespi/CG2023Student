@@ -87,9 +87,9 @@ void Camera::UpdateViewMatrix()
 	//SetExampleViewMatrix();
 
 	//Creation of Forward, Side and Top vectors
-	Vector3 side = this->left;
 	Vector3 top = this->up;
 	Vector3 forward = this->center - this->eye;
+	Vector3 side = forward.Cross(top);
 
 	// Remember how to fill a Matrix4x4 (check framework slides)
 	// Careful with the order of matrix multiplications, and be sure to use normalized vectors!
@@ -107,11 +107,6 @@ void Camera::UpdateViewMatrix()
 	view_matrix.M[0][2] = -forward.x;
 	view_matrix.M[1][2] = -forward.y;
 	view_matrix.M[2][2] = -forward.z;
-
-	view_matrix.M[3][0] = view_matrix.M[3][1] = view_matrix.M[3][2] = 
-		view_matrix.M[0][3] = view_matrix.M[1][3] = view_matrix.M[2][3] = 0;
-
-	view_matrix.M[3][3] = 1.0;
 
 	// Translate view matrix
 	view_matrix.TranslateLocal(-1 * this->eye.x, -1 * this->eye.y, -1 * this->eye.z);
