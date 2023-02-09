@@ -200,9 +200,9 @@ void Matrix44::RotateLocal( float angle_in_rad, const Vector3& axis )
 void Matrix44::SetTranslation(float x, float y, float z)
 {
 	SetIdentity();
-	m[12] = x;
-	m[13] = y;
-	m[14] = z;
+	m[12] += x;
+	m[13] += y;
+	m[14] += z;
 }
 
 void Matrix44::SetScale(float a){

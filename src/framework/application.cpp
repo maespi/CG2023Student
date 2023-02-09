@@ -62,18 +62,19 @@ void Application::Init(void)
 // Render one frame
 void Application::Render(void)
 {
-
+    
     for (int i = 0; i < entities.size(); i++) {
-        entities[i]->Render(&framebuffer, &c, entities_color[i]);
+        entities[i]->Render(&framebuffer, &c, (entities_color[i]));
     }
     framebuffer.Render();
 }
 
 // Called after render
 void Application::Update(float seconds_elapsed){
-    entities[0]->Update(seconds_elapsed);
-    entities[1]->Update(seconds_elapsed);
-    entities[2]->Update(seconds_elapsed);
+    
+    entities[0]->Update(seconds_elapsed,1);
+    entities[1]->Update(seconds_elapsed,2);
+    entities[2]->Update(seconds_elapsed,3);
 
     framebuffer.Fill(Color::BLACK);
 }
