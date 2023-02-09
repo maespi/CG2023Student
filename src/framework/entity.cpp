@@ -5,27 +5,22 @@
 Entity::Entity() {
 	mesh = new Mesh();
     model.SetIdentity();
-
 }
 
 Entity::Entity(Mesh * m) {
 	mesh = m;
     model.SetIdentity();
-
 }
 
 Entity::Entity(const char* dir) {
 	mesh = new Mesh();
 	mesh->LoadOBJ(dir);
     model.SetIdentity();
-
 }
 
 //Destructor
 Entity::~Entity() {
 }
-
-
 
 //Render function to render mesh object
 void Entity::Render(Image* framebuffer, Camera* camera, const Color& c) {
@@ -41,23 +36,6 @@ void Entity::Render(Image* framebuffer, Camera* camera, const Color& c) {
 		v1 = model * v1;
 		v2 = model * v2;
 		v3 = model * v3;
-
-		/*std::cout << model._11 << std::endl;
-		std::cout << model._12 << std::endl;
-		std::cout << model._13 << std::endl;
-		std::cout << model._14 << std::endl;
-		std::cout << model._21 << std::endl;
-		std::cout << model._22 << std::endl;
-		std::cout << model._23 << std::endl;
-		std::cout << model._24 << std::endl;
-		std::cout << model._31 << std::endl;
-		std::cout << model._32 << std::endl;
-		std::cout << model._33 << std::endl;
-		std::cout << model._34 << std::endl;
-		std::cout << model._41 << std::endl;
-		std::cout << model._42 << std::endl;
-		std::cout << model._43 << std::endl;
-		std::cout << model._44 << std::endl;*/
 
 		//World Space to Clip Space
 		//Calculates if z is outside the camera
@@ -87,6 +65,19 @@ void Entity::Render(Image* framebuffer, Camera* camera, const Color& c) {
 		}
 		
 	}
+}
+
+void Entity::Update(float sec)
+{
+	/*float c = std::fmod(sec, 180);
+	model.M[0][0] = model.M[0][0] * cos(c);
+	model.M[0][2] = model.M[0][2] * -sin(c);
+	model.M[2][0] = model.M[2][0] * sin(c);
+	model.M[2][2] = model.M[2][2] * cos(c);*/
+
+	//model.SetRotation(sec, Vector3(model.M[0][0], model.M[1][0], model.M[2][0]));
+	model.SetTranslation(0, 0.001,0);
+
 }
 
 

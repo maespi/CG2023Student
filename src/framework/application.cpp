@@ -4,8 +4,8 @@
 #include "utils.h"
 #include "entity.h"
 
-
-Entity* e;
+std::vector<Entity*> entities;
+std::vector<Color> entities_color;
 Camera c;
 
 //if you de-comment the lines: 32,38,45 you'll se the animation.
@@ -34,35 +34,45 @@ void Application::Init(void)
 {
     std::cout << "Initiating app..." << std::endl;
 
-    Mesh* mesh = new Mesh();
-    mesh->LoadOBJ("../res/meshes/lee.obj");
+    Mesh* mesh1 = new Mesh();
+    mesh1->LoadOBJ("../res/meshes/lee.obj");
+    Mesh* mesh2 = new Mesh();
+    mesh2->LoadOBJ("../res/meshes/cleo.obj");
+    Mesh* mesh3 = new Mesh();
+    mesh3->LoadOBJ("../res/meshes/anna.obj");
 
-    e = new Entity(mesh);
+    Entity* e1 = new Entity(mesh1);
+    e1->model.TranslateLocal(1.2, .35, -1.5);
+    entities.push_back(e1);
+    entities_color.push_back(Color::RED);
+    Entity* e2 = new Entity(mesh3);
+    e2->model.TranslateLocal(.2, .25, -1);
+    entities.push_back(e2);
+    entities_color.push_back(Color::BLUE);
+    Entity* e3 = new Entity(mesh2);
+    e3->model.TranslateLocal(.6, .5, -1);
+    entities.push_back(e3);
+    entities_color.push_back(Color::WHITE);
+
     c = Camera();
-    //e->model.TranslateLocal(0, 0, -.8);
-    c.SetPerspective(65, 1, .01, 100);
-    //c.LookAt(Vector3(0, 0, 1), Vector3(0, 0, -1), Vector3::UP);
-    //c.Move(Vector3(0,0,-.5));
-    e->Render(&framebuffer, &c, Color::WHITE);
-    framebuffer.Render();
-
-    /*std::cout << c.eye.x << std::endl;
-    std::cout << c.eye.y << std::endl;
-    std::cout << c.eye.z << std::endl;*/
+    c.SetPerspective(45, 1, .01, 100);
+    c.LookAt(Vector3(0, 0, 1), Vector3(0, 0, 0), Vector3::UP);
 }
 
 // Render one frame
 void Application::Render(void)
 {
-    e->Render(&framebuffer, &c, Color::WHITE);
+
+    for (int i = 0; i < entities.size(); i++) {
+        entities[i]->Render(&framebuffer, &c, entities_color[i]);
+    }
     framebuffer.Render();
-    
 }
 
 // Called after render
 void Application::Update(float seconds_elapsed){
-    //e->Update(seconds_elapsed);
-    //framebuffer.Fill(Color::BLACK);
+    entities[0]->Update(seconds_elapsed);
+    framebuffer.Fill(Color::BLACK);
 }
 
 //keyboard press event
