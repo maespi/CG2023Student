@@ -93,9 +93,9 @@ void Camera::UpdateViewMatrix()
 
 	// Remember how to fill a Matrix4x4 (check framework slides)
 	// Careful with the order of matrix multiplications, and be sure to use normalized vectors!
-	side.Normalize();
-	top.Normalize();
-	forward.Normalize();
+	side = side.Normalize();
+	top = top.Normalize();
+	forward = forward.Normalize();
 	
 	// Create the view matrix rotation
 	view_matrix.M[0][0] = side.x;
@@ -104,9 +104,9 @@ void Camera::UpdateViewMatrix()
 	view_matrix.M[0][1] = top.x;
 	view_matrix.M[1][1] = top.y;
 	view_matrix.M[2][1] = top.z;
-	view_matrix.M[0][2] = forward.x;
-	view_matrix.M[1][2] = forward.y;
-	view_matrix.M[2][2] = forward.z;
+	view_matrix.M[0][2] = -forward.x;
+	view_matrix.M[1][2] = -forward.y;
+	view_matrix.M[2][2] = -forward.z;
 
 	view_matrix.M[3][0] = view_matrix.M[3][1] = view_matrix.M[3][2] = 
 		view_matrix.M[0][3] = view_matrix.M[1][3] = view_matrix.M[2][3] = 0;

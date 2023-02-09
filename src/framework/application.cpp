@@ -35,8 +35,13 @@ void Application::Init(void)
 
     Entity* e = new Entity(mesh);
     Camera c = Camera();
-    c.SetPerspective(45, 1, .01, 100);
+    e->model.TranslateLocal(.1, .1, -1);
+    c.SetPerspective(45, 1, 0, 100);
+    //c.Move(Vector3(0,0,0));
     e->Render(&framebuffer, &c, Color::WHITE);
+    std::cout << c.eye.x << std::endl;
+    std::cout << c.eye.y << std::endl;
+    std::cout << c.eye.z << std::endl;
 
 }
 

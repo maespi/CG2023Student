@@ -4,39 +4,28 @@
 
 Entity::Entity() {
 	mesh = new Mesh();
-
+	model.SetIdentity();
 }
 
 Entity::Entity(Mesh * m) {
 	mesh = m;
+	model.SetIdentity();
 }
 
 Entity::Entity(const char* dir) {
 	mesh = new Mesh();
 	mesh->LoadOBJ(dir);
+	model.SetIdentity();
 }
 
 //Destructor
 Entity::~Entity() {
-
 }
 
 
 
 //Render function to render mesh object
 void Entity::Render(Image* framebuffer, Camera* camera, const Color& c) {
-	
-	/*Matrix44 P;
-	camera->SetOrthographic
-	model._11 = 2 / (camera->right - camera->left);
-	model._22 = 2 / (camera->top - camera->bottom);
-	model._33 = 2 / (camera->far_plane - camera->near_plane);
-
-	model._41 = -(camera->right + camera->left) / (camera->right - camera->left);
-	model._42 = -(camera->top + camera->bottom) / (camera->top - camera->bottom);
-	model._43 = -(camera->far_plane + camera->near_plane) / (camera->far_plane - camera->near_plane);
-	model._44 = 1;
-	*/
 	
 	std::vector<Vector3> vertices = mesh->GetVertices();
 
@@ -77,35 +66,6 @@ void Entity::Render(Image* framebuffer, Camera* camera, const Color& c) {
 		}
 		
 	}
-	//Alternative
-	/*
-	std::vector<Vector3> vertices(3);
-	for (Vector3 v : mesh->GetVertices()) {
-		//Transforma local to World
-		v = model * v;
-		
-		//World Space to Clip Space
-		bool negZ;//Calculates if z is outside the camera
-		v = camera->ProjectVector(v, negZ);
-
-		//Convert clip space positions to screen space
-		v.x = v.x * (framebuffer->width - 1);
-		v.y = v.y * (framebuffer->height - 1);
-
-		if (negZ) {
-			vertices.clear();
-			continue;
-		}
-		vertices.push_back(v);
-
-		if (vertices.size() == 3){
-			framebuffer->DrawLineBresenham(vertices[0].x, vertices[0].y, vertices[1].x, vertices[1].y, c);
-			framebuffer->DrawLineBresenham(vertices[1].x, vertices[1].y, v.x, v.y, c);
-			framebuffer->DrawLineBresenham(v.x, v.y, vertices[0].x, vertices[0].y, c);
-			vertices.clear();
-		}
-
-	}*/
 }
 
 
