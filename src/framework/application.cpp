@@ -4,6 +4,10 @@
 #include "utils.h"
 #include "entity.h"
 
+
+Entity* e;
+Camera c;
+
 //if you de-comment the lines: 32,38,45 you'll se the animation.
 Application::Application(const char* caption, int width, int height)
 {
@@ -48,12 +52,17 @@ void Application::Init(void)
 // Render one frame
 void Application::Render(void)
 {
+    e->Render(&framebuffer, &c, Color::WHITE);
+
     framebuffer.Render();
+    
 }
 
 // Called after render
-void Application::Update(float seconds_elapsed)
-{
+void Application::Update(float seconds_elapsed){
+    //e->Update(seconds_elapsed);
+    //framebuffer.Fill(Color::BLACK);
+    
     
 }
 

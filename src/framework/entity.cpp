@@ -4,18 +4,21 @@
 
 Entity::Entity() {
 	mesh = new Mesh();
-	model.SetIdentity();
+    model.SetIdentity();
+
 }
 
 Entity::Entity(Mesh * m) {
 	mesh = m;
-	model.SetIdentity();
+    model.SetIdentity();
+
 }
 
 Entity::Entity(const char* dir) {
 	mesh = new Mesh();
 	mesh->LoadOBJ(dir);
-	model.SetIdentity();
+    model.SetIdentity();
+
 }
 
 //Destructor
@@ -26,7 +29,7 @@ Entity::~Entity() {
 
 //Render function to render mesh object
 void Entity::Render(Image* framebuffer, Camera* camera, const Color& c) {
-	
+    
 	std::vector<Vector3> vertices = mesh->GetVertices();
 
 	for (int i = 0; i < (vertices.size()-3); i+=3) {
