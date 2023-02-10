@@ -87,8 +87,8 @@ void Camera::UpdateViewMatrix()
 	//SetExampleViewMatrix();
 
 	//Creation of Forward, Side and Top vectors
-	Vector3 top = this->up;
-	Vector3 forward = this->center - this->eye;
+	Vector3 top = up;
+	Vector3 forward = center - eye;
 	Vector3 side = forward.Cross(top);
 
 	// Remember how to fill a Matrix4x4 (check framework slides)
@@ -127,7 +127,6 @@ void Camera::UpdateProjectionMatrix()
 	
 	if (type == PERSPECTIVE) {
 		projection_matrix.M[1][1] = 1 / (tan(this->fov / 2));
-
 		projection_matrix.M[0][0] = projection_matrix.M[1][1] / this->aspect;
 		projection_matrix.M[2][2] = (this->far_plane + this->near_plane) / (this->near_plane - this->far_plane);
 		projection_matrix.M[3][2] = 2*(this->far_plane * this->near_plane) / (this->near_plane - this->far_plane);
@@ -139,7 +138,6 @@ void Camera::UpdateProjectionMatrix()
 		projection_matrix.M[0][0] = 2 / (this->right - this->left);
 		projection_matrix.M[1][1] = 2 / (this->top - this->bottom);
 		projection_matrix.M[2][2] = -2 / (this->far_plane - this->near_plane);
-
 		projection_matrix.M[0][3] = -(this->right + this->left) / (this->right - this->left);
 		projection_matrix.M[1][3] = -(this->top + this->bottom) / (this->top - this->bottom);
 		projection_matrix.M[0][3] = -(this->far_plane + this->near_plane) / (this->far_plane - this->near_plane);

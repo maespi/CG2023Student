@@ -7,7 +7,7 @@
 std::vector<Entity*> entities;
 std::vector<Color> entities_color;
 Camera c;
-int type_c = 1;
+int type_c = -1;
 Vector3 lukat_x = Vector3(0, 0, 1);
 int near= 0;
 int far = 0;
@@ -96,28 +96,68 @@ void Application::OnKeyPressed( SDL_KeyboardEvent event )
     
     // KEY CODES: https://wiki.libsdl.org/SDL2/SDL_Keycode
     switch(event.keysym.sym) {
-        case SDLK_RIGHT:
+        case SDLK_RIGHT://look right
             c.center.x += 0.05;
             c.UpdateViewMatrix();
 
             break;
-        case SDLK_LEFT:
+        case SDLK_LEFT://look left
             c.center.x -= 0.05;
             c.UpdateViewMatrix();
 
             break;
-        case SDLK_UP:
-            c.center.y += 0.05;
-            c.UpdateViewMatrix();
-
+        case SDLK_UP://zoom in
+            c.fov-=0.1;
+            c.UpdateProjectionMatrix();
             break;
-        case SDLK_DOWN:
-            c.center.y -= 0.05;
-            c.UpdateViewMatrix();
-
+            
+        case SDLK_DOWN://zoom out
+            c.fov+=0.1;
+            c.UpdateProjectionMatrix();
             break;
+            
         case SDLK_c: //To lock camera
             type_c *= -1;
+            break;
+            
+        case SDLK_d://++ near plane
+            c.near_plane+=0.9;
+            c.UpdateProjectionMatrix();
+            break;
+            
+        case SDLK_a://-- near plane
+            c.near_plane-=0.9;
+            c.UpdateProjectionMatrix();
+            break;
+            
+        case SDLK_q://++ far plane
+            c.far_plane+=0.9;
+            c.UpdateProjectionMatrix();
+            break;
+            
+        case SDLK_e://-- far plane
+            c.far_plane-=0.9;
+            c.UpdateProjectionMatrix();
+            break;
+            
+        case SDLK_w://++ axis y camera
+            c.center.y += 0.05;
+            c.UpdateViewMatrix();
+            break;
+            
+        case SDLK_s://-- axis y camera
+            c.center.y -= 0.05;
+            c.UpdateViewMatrix();
+            break;
+            
+        case SDLK_o://set orthographic view
+            c.type = c.ORTHOGRAPHIC;
+            c.UpdateProjectionMatrix();
+            break;
+            
+        case SDLK_p://set perspective view
+            c.type = c.PERSPECTIVE;
+            c.UpdateProjectionMatrix();
             break;
             
         case SDLK_ESCAPE:

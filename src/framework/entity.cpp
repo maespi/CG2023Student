@@ -71,8 +71,6 @@ void Entity::Update(float sec, int type){
     if (type == 1){//vermella
         
         model.Translate(-sec/15,0,0);
-        //model.Scale(sec/1000000);
-
         
     } else if (type == 2){//blava
         model.Rotate(sec, Vector3(0,sec,2));
@@ -84,7 +82,6 @@ void Entity::Update(float sec, int type){
         model.M[0][2] = model.M[0][2] * -sin(c);
         model.M[2][0] = model.M[2][0] * sin(c);
         model.M[2][2] = model.M[2][2] * cos(c);
-        
         model.Rotate(sec, Vector3(model.M[0][0], model.M[1][0], model.M[2][0]));
 
     }
