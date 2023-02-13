@@ -57,7 +57,7 @@ public:
 	Vector3 ProjectVector(Vector3 pos, bool& negZ);
 
 	// Set the info for each projection
-    void SetPerspective(float f, float asp, float near, float far);
+    void SetPerspective(float f, float asp, float near_p, float far_p);
     void SetOrthographic(float left, float right, float top, float bottom, float near_plane, float far_plane);
 	void LookAt(const Vector3& eye, const Vector3& center, const Vector3& up);
 

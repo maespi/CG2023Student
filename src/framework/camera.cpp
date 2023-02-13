@@ -57,14 +57,14 @@ void Camera::SetOrthographic(float left, float right, float top, float bottom, f
 	UpdateProjectionMatrix();
 }
 
-void Camera::SetPerspective(float f, float asp, float near, float far)
+void Camera::SetPerspective(float f, float asp, float near_p, float far_p)
 {
 	type = PERSPECTIVE;
 
 	fov = f;
 	aspect = asp;
-	near_plane = near;
-	far_plane = far;
+	near_plane = near_p;
+	far_plane = far_p;
 
 	UpdateProjectionMatrix();
 }
