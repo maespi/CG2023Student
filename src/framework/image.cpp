@@ -487,3 +487,7 @@ void FloatImage::Resize(unsigned int width, unsigned int height)
     this->height = height;
     pixels = new_pixels;
 }
+
+void Image::DrawTriangle(const Vector2& p0, const Vector2& p1, const Vector2& p2, const Color& color) {
+    
+}

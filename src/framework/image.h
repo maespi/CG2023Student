@@ -70,6 +70,9 @@ public:
     // Fill the image with the color C
     void Fill(const Color& c) { for(unsigned int pos = 0; pos < width*height; ++pos) pixels[pos] = c; }
 
+    //Draw a filled triangle using AET
+    void DrawTriangle(const Vector2& p0, const Vector2& p1, const Vector2& p2, const Color& color);
+
     // Returns a new image with the area from (startx,starty) of size width,height
     Image GetArea(unsigned int start_x, unsigned int start_y, unsigned int width, unsigned int height);
 

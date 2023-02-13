@@ -8,6 +8,16 @@ public:
 	Mesh* mesh;
 	Matrix44 model;
 
+	//Enumeration Draw Tipe
+	enum class eRenderMode {
+
+		POINTCLOUD,
+		WIREFRAME,
+		TRIANGLES,
+		TRIANGLES_INTERPOLATED
+
+	};
+
 	//Constructors
 	Entity();
 	Entity(Mesh*);
