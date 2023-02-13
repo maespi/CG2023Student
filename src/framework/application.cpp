@@ -186,7 +186,15 @@ void Application::OnMouseMove(SDL_MouseButtonEvent event)
         c.Move(Vector3(-mouse_delta.x*0.01,mouse_delta.y*0.01,0));
     }
 }
+void Application::OnWheel(SDL_MouseWheelEvent event)
+{
+	float dy = event.preciseY;
 
-void Application::OnFileChanged(const char* filename){
-    Shader::ReloadSingleShader(filename);
+	// ...
 }
+
+void Application::OnFileChanged(const char* filename)
+{ 
+	Shader::ReloadSingleShader(filename);
+}
+
