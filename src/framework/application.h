@@ -12,6 +12,39 @@
 class Application{
 public:
 
+    struct particle {//structs for the animation.
+        int velocity;
+        int posx;
+        int posy;
+        Color col;
+
+        particle() {
+            velocity = 0;
+            posx = 0;
+            posy = 0;
+            col = Color::BLACK;
+        }
+
+        void set(int x, int y, int v, int r, int g, int b) { //setters
+            velocity = v;
+            posx = x;
+            posy = y;
+            col.Set(r, g, b);
+        }
+
+        void update(float time, int w, int h) { //updating positions of the animation
+
+            if (posx == 0 || posy == 10) {
+                posx = posx - time * velocity;
+                posy = posy - time * velocity;
+            }
+            else {
+                posx = rand() % w;
+                posy = rand() % h;
+            }
+        }
+    };
+
 	// Window
 
 	SDL_Window* window;
@@ -57,7 +90,6 @@ public:
 		SDL_GetWindowSize(window,&w,&h);
 		return Vector2(float(w), float(h));
 	}
-};
     
 class Animation{ //type of class Animation
 public:
@@ -91,6 +123,8 @@ public:
         }
 
     }
+};
+
 };
     
 
