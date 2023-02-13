@@ -9,8 +9,8 @@ std::vector<Color> entities_color;
 Camera c;
 int type_c = -1;
 Vector3 lukat_x = Vector3(0, 0, 1);
-int near= 0;
-int far = 0;
+int near_p = 0;
+int far_p = 0;
 
 
 //if you de-comment the lines: 32,38,45 you'll se the animation.
@@ -63,7 +63,7 @@ void Application::Init(void)
 
     c = Camera();
     c.SetPerspective(45, 1, .01, 100);
-    c.LookAt(lukat_x, Vector3(near, 0, 0), Vector3::UP);
+    c.LookAt(lukat_x, Vector3(near_p, 0, 0), Vector3::UP);
 }
 
 // Render one frame
