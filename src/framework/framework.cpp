@@ -143,10 +143,20 @@ void Matrix44::SetIdentity()
 	m[3]=0; m[7]=0; m[11]=0; m[15]=1;
 }
 
+
+
 void Matrix44::Transpose()
 {
    std::swap(m[1],m[4]); std::swap(m[2],m[8]); std::swap(m[3],m[12]);
    std::swap(m[6],m[9]); std::swap(m[7],m[13]); std::swap(m[11],m[14]);
+}
+
+void Matrix44::Scale(float a){
+    
+    Matrix44 M;
+    M.SetScale(a);
+    *this = *this * M;
+    
 }
 
 void Matrix44::Translate(float x, float y, float z)
@@ -190,9 +200,17 @@ void Matrix44::RotateLocal( float angle_in_rad, const Vector3& axis )
 void Matrix44::SetTranslation(float x, float y, float z)
 {
 	SetIdentity();
-	m[12] = x;
-	m[13] = y;
-	m[14] = z;
+	m[12] += x;
+	m[13] += y;
+	m[14] += z;
+}
+
+void Matrix44::SetScale(float a){
+    SetIdentity();
+    M[0][0] *= a;
+    M[1][1] *= a;
+    M[2][2] *= a;
+    M[3][3] *= a;
 }
 
 //To create a rotation matrix
@@ -458,7 +476,6 @@ bool Matrix44::Inverse()
 
       // No non-zero pivot.  The CMatrix is singular, which shouldn't
       // happen.  This means the user gave us a bad CMatrix.
-
 
 #define MATRIX_SINGULAR_THRESHOLD 0.00001 //change this if you experience problems with matrices
 

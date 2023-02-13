@@ -2,9 +2,18 @@
 #include "mesh.h"
 #include "shader.h"
 #include "utils.h"
+#include "entity.h"
+
+std::vector<Entity*> entities;
+std::vector<Color> entities_color;
+Camera c;
+int type_c = -1;
+Vector3 lukat_x = Vector3(0, 0, 1);
+int near= 0;
+int far = 0;
+
 
 //if you de-comment the lines: 32,38,45 you'll se the animation.
-
 Application::Application(const char* caption, int width, int height)
 {
     this->window = createWindow(caption, width, height);
@@ -29,21 +38,53 @@ Application::~Application()
 void Application::Init(void)
 {
     std::cout << "Initiating app..." << std::endl;
-    //anim.SetAnimation(10, framebuffer.width, framebuffer.height);
+
+    
+    
+    Mesh* mesh1 = new Mesh();
+    mesh1->LoadOBJ("../res/meshes/lee.obj");
+    Mesh* mesh2 = new Mesh();
+    mesh2->LoadOBJ("../res/meshes/cleo.obj");
+    Mesh* mesh3 = new Mesh();
+    mesh3->LoadOBJ("../res/meshes/anna.obj");
+
+    Entity* e1 = new Entity(mesh1);
+    e1->model.TranslateLocal(1.2, .35, -1.5);
+    entities.push_back(e1);
+    entities_color.push_back(Color::RED);
+    Entity* e2 = new Entity(mesh3);
+    e2->model.TranslateLocal(.2, .25, -1);
+    entities.push_back(e2);
+    entities_color.push_back(Color::BLUE);
+    Entity* e3 = new Entity(mesh2);
+    e3->model.TranslateLocal(.6, .5, -1);
+    entities.push_back(e3);
+    entities_color.push_back(Color::WHITE);
+
+    c = Camera();
+    c.SetPerspective(45, 1, .01, 100);
+    c.LookAt(lukat_x, Vector3(near, 0, 0), Vector3::UP);
 }
 
 // Render one frame
 void Application::Render(void)
 {
-    //framebuffer = anim.img;
+    
+    for (int i = 0; i < entities.size(); i++) {
+        entities[i]->Render(&framebuffer, &c, (entities_color[i]));
+    }
+
     framebuffer.Render();
 }
-// Called after render
-void Application::Update(float seconds_elapsed)
-{
-    
-    //anim.UpdateAnimation(seconds_elapsed);
 
+// Called after render
+void Application::Update(float seconds_elapsed){
+    
+    for (int i = 0; i < entities.size(); i++) {
+        entities[i]->Update(seconds_elapsed,i+1);
+    }
+
+    framebuffer.Fill(Color::BLACK);
 }
 
 //keyboard press event
@@ -55,18 +96,70 @@ void Application::OnKeyPressed( SDL_KeyboardEvent event )
     
     // KEY CODES: https://wiki.libsdl.org/SDL2/SDL_Keycode
     switch(event.keysym.sym) {
-        case SDLK_1:
-            framebuffer.DrawLineDDA(100, 100, 200, 300, Color::YELLOW);
+        case SDLK_RIGHT://look right
+            c.center.x += 0.05;
+            c.UpdateViewMatrix();
+
             break;
-        case SDLK_2:
-            framebuffer.DrawLineBresenham(1000, 300, 1000 + 200 * cos(time * 3), 300 + 200 * sin(time * 3), Color(r, g, b));
+        case SDLK_LEFT://look left
+            c.center.x -= 0.05;
+            c.UpdateViewMatrix();
+
             break;
-        case SDLK_3:
-            framebuffer.DrawCircle(500, 500, 100, Color::WHITE, true);
+        case SDLK_UP://zoom in
+            c.fov-=0.1;
+            c.UpdateProjectionMatrix();
             break;
-        case SDLK_4:
-            framebuffer.Fill(Color::BLACK);
+            
+        case SDLK_DOWN://zoom out
+            c.fov+=0.1;
+            c.UpdateProjectionMatrix();
             break;
+            
+        case SDLK_c: //To lock camera
+            type_c *= -1;
+            break;
+            
+        case SDLK_d://++ near plane
+            c.near_plane+=0.9;
+            c.UpdateProjectionMatrix();
+            break;
+            
+        case SDLK_a://-- near plane
+            c.near_plane-=0.9;
+            c.UpdateProjectionMatrix();
+            break;
+            
+        case SDLK_q://++ far plane
+            c.far_plane+=0.9;
+            c.UpdateProjectionMatrix();
+            break;
+            
+        case SDLK_e://-- far plane
+            c.far_plane-=0.9;
+            c.UpdateProjectionMatrix();
+            break;
+            
+        case SDLK_w://++ axis y camera
+            c.center.y += 0.05;
+            c.UpdateViewMatrix();
+            break;
+            
+        case SDLK_s://-- axis y camera
+            c.center.y -= 0.05;
+            c.UpdateViewMatrix();
+            break;
+            
+        case SDLK_o://set orthographic view
+            c.type = c.ORTHOGRAPHIC;
+            c.UpdateProjectionMatrix();
+            break;
+            
+        case SDLK_p://set perspective view
+            c.type = c.PERSPECTIVE;
+            c.UpdateProjectionMatrix();
+            break;
+            
         case SDLK_ESCAPE:
             exit(0);
             break; // ESC key, kill the app
@@ -89,10 +182,11 @@ void Application::OnMouseButtonUp( SDL_MouseButtonEvent event )
 
 void Application::OnMouseMove(SDL_MouseButtonEvent event)
 {
-    
+    if (type_c == 1){
+        c.Move(Vector3(-mouse_delta.x*0.01,mouse_delta.y*0.01,0));
+    }
 }
 
-void Application::OnFileChanged(const char* filename)
-{
+void Application::OnFileChanged(const char* filename){
     Shader::ReloadSingleShader(filename);
 }
