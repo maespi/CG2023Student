@@ -5,17 +5,20 @@
 Entity::Entity() {
 	mesh = new Mesh();
     model.SetIdentity();
+	rMode = eRenderMode::WIREFRAME;
 }
 
 Entity::Entity(Mesh * m) {
 	mesh = m;
     model.SetIdentity();
+	rMode = eRenderMode::WIREFRAME;
 }
 
 Entity::Entity(const char* dir) {
 	mesh = new Mesh();
 	mesh->LoadOBJ(dir);
     model.SetIdentity();
+	rMode = eRenderMode::WIREFRAME;
 }
 
 //Destructor
@@ -58,16 +61,23 @@ void Entity::Render(Image* framebuffer, Camera* camera, const Color& c) {
 			v3.x = (v3.x+1) / 2 * (framebuffer->width - 1);
 			v3.y = (v3.y+1) / 2 * (framebuffer->height - 1);
 
-			//Set Line Bresenham to buffer
-			framebuffer->DrawLineBresenham(v1.x, v1.y, v2.x, v2.y, c);
-			framebuffer->DrawLineBresenham(v2.x, v2.y, v3.x, v3.y, c);
-			framebuffer->DrawLineBresenham(v3.x, v3.y, v1.x, v1.y, c);
+			//Draw into space
+			if (rMode == eRenderMode::TRIANGLES) {
+				framebuffer->DrawTriangle(v1.GetVector2(), v2.GetVector2(), v3.GetVector2(), c);
+			}
+			else {//rMode == eRenderMode::WIREFRAME
+				framebuffer->DrawLineBresenham(v1.x, v1.y, v2.x, v2.y, c);
+				framebuffer->DrawLineBresenham(v2.x, v2.y, v3.x, v3.y, c);
+				framebuffer->DrawLineBresenham(v3.x, v3.y, v1.x, v1.y, c);
+			}
+			
 		}
-		
 	}
+
 }
 
 void Entity::Update(float sec, int type){
+	
     if (type == 1){//vermella
         
         model.Translate(-sec/15,0,0);
@@ -85,16 +95,6 @@ void Entity::Update(float sec, int type){
         model.Rotate(sec, Vector3(model.M[0][0], model.M[1][0], model.M[2][0]));
 
     }
-     
-
-	
-    
-
-	//model.SetTranslation(0, 0.001,0);
-    //model.Rotate(sec, Vector3(0,sec,0));
-    //model.Rotate(sec*10, Vector3(0,0,sec));
-    //model.Scale(sec*100);
-
 }
 
 

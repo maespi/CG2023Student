@@ -8,7 +8,7 @@ std::vector<Entity*> entities;
 std::vector<Color> entities_color;
 Camera c;
 int type_c = -1;
-Vector3 lukat_x = Vector3(0, 0, 1);
+Vector3 lukat_x = Vector3(0.5, 0.25, 1);    //Camera position centered on images
 int near_p = 0;
 int far_p = 0;
 
@@ -50,20 +50,25 @@ void Application::Init(void)
 
     Entity* e1 = new Entity(mesh1);
     e1->model.TranslateLocal(1.2, .35, -1.5);
+    e1->setMode(eRenderMode::TRIANGLES);
     entities.push_back(e1);
     entities_color.push_back(Color::RED);
+
     Entity* e2 = new Entity(mesh3);
+    e2->setMode(eRenderMode::TRIANGLES);
     e2->model.TranslateLocal(.2, .25, -1);
     entities.push_back(e2);
     entities_color.push_back(Color::BLUE);
+
     Entity* e3 = new Entity(mesh2);
     e3->model.TranslateLocal(.6, .5, -1);
+    e3->setMode(eRenderMode::TRIANGLES);
     entities.push_back(e3);
     entities_color.push_back(Color::WHITE);
 
     c = Camera();
     c.SetPerspective(45, 1, .01, 100);
-    c.LookAt(lukat_x, Vector3(near_p, 0, 0), Vector3::UP);
+    c.LookAt(lukat_x, Vector3(near_p+0.5, .25, 0), Vector3::UP);    //Camera centered on images
 }
 
 // Render one frame
@@ -81,7 +86,7 @@ void Application::Render(void)
 void Application::Update(float seconds_elapsed){
     
     for (int i = 0; i < entities.size(); i++) {
-        entities[i]->Update(seconds_elapsed,i+1);
+        entities[i]->Update(seconds_elapsed,0);//i+1 to update animations
     }
 
     framebuffer.Fill(Color::BLACK);
@@ -116,7 +121,7 @@ void Application::OnKeyPressed( SDL_KeyboardEvent event )
             c.UpdateProjectionMatrix();
             break;
             
-        case SDLK_c: //To lock camera
+        case SDLK_u: //To lock camera
             type_c *= -1;
             break;
             
@@ -186,6 +191,7 @@ void Application::OnMouseMove(SDL_MouseButtonEvent event)
         c.Move(Vector3(-mouse_delta.x*0.01,mouse_delta.y*0.01,0));
     }
 }
+
 void Application::OnWheel(SDL_MouseWheelEvent event)
 {
 	float dy = event.preciseY;

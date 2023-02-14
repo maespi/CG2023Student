@@ -495,7 +495,20 @@ void Image::DrawTriangle(const Vector2& p0, const Vector2& p1, const Vector2& p2
     ScanLineBresenham(p0.x, p0.y, p1.x, p1.y, AET);
     ScanLineBresenham(p1.x, p1.y, p2.x, p2.y, AET);
     ScanLineBresenham(p2.x, p2.y, p0.x, p0.y, AET);
-    //TODO: After scanning edges, if minx<=maxx, fill entire row from min to max.
+    //Scan max and min Y values
+    int maxY = (p0.y > p1.y) ? p0.y : p1.y;
+    if(p2.y > maxY) maxY = p2.y;
+    int minY = (p0.y > p1.y) ? p1.y : p0.y;
+    if (p2.y < minY) minY = p2.y;
+
+    //Fill Row
+    for (int i = maxY; i > minY; i--) {
+        if (AET[i].minX <= AET[i].maxX) {
+            for (int n = AET[i].minX; n < AET[i].maxX; n++) {
+                SetPixelSafe(n, i, color);
+            }
+        }
+    }
 }
 
 //Updated the minX and maxX of the boundary table
