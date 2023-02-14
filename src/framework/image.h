@@ -31,6 +31,15 @@ class Image
         unsigned char* data; // Bytes with the pixel information
     } TGAInfo;
 
+    struct imageCell {//Struct to save min and max X value of traingle line
+        int minX;
+        int maxX;
+        imageCell(int min, int max) {
+            minX = min;
+            maxX = max;
+        }
+    };
+
 public:
     unsigned int width;
     unsigned int height;
@@ -91,6 +100,9 @@ public:
 
     //Bresenham circle algorithm to draw a circle
     void DrawCircle(int x0, int y0, int r, const Color& c, bool fill);
+
+    //Bresenham algorithm to compute min and max x of a triangle
+    void ScanLineBresenham(int x0, int y0, int x1, int y1, std::vector<imageCell>& table);
 
     // Used to easy code
     #ifndef IGNORE_LAMBDAS

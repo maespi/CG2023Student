@@ -488,6 +488,65 @@ void FloatImage::Resize(unsigned int width, unsigned int height)
     pixels = new_pixels;
 }
 
+//Drawing a filled triangle using the Active Edges Table (AET) approach
 void Image::DrawTriangle(const Vector2& p0, const Vector2& p1, const Vector2& p2, const Color& color) {
-    
+    std::vector<imageCell> AET;
+    AET.assign(this->height - 1, imageCell(width,0));
+    ScanLineBresenham(p0.x, p0.y, p1.x, p1.y, AET);
+    ScanLineBresenham(p1.x, p1.y, p2.x, p2.y, AET);
+    ScanLineBresenham(p2.x, p2.y, p0.x, p0.y, AET);
+    //TODO: After scanning edges, if minx<=maxx, fill entire row from min to max.
+}
+
+//Updated the minX and maxX of the boundary table
+void Image::ScanLineBresenham(int x0, int y0, int x1, int y1, std::vector<imageCell>& table) {
+     //To flip the start-end points to calculate only octants 1,2,7,8
+    if (x0 >= x1) {
+        std::swap(x0, x1);
+        std::swap(y0, y1);
+    }
+
+    int dx = abs(x1 - x0);
+    int dy = abs(y1 - y0);
+    int inc_U = 2 * dy - 1; // Add - 1 to avoid non value of variable (It locks x0 = x1 printing points)
+    int inc_M = 2 * (dy - dx);
+    int d = 2 * dy - dx;
+    int x = x0;
+    int y = y0;
+    //Test if any value is in the boundary of the triangle
+    if(table[y].minX>x)
+        table[y].minX = x;
+    if(table[y].maxX<x)
+        table[y].maxX = x;
+
+    bool main_axis_Y = false; // To detect if dy > dx and so octant 2
+
+    //Recalculate variables with base in dy in case of dy > dx
+    if (dy > dx) {
+        main_axis_Y = true;
+        inc_U = (2 * dx);
+        inc_M = 2 * (dx - dy);
+        d = 2 * dx - dy;
+    }
+
+    int dir_Y = (y0 > y1) ? -1 : 1;    //To flip between octants 1,2 to 7,8
+
+    while ((x <= x1 && y != y1) || (x < x1 && y0 == y1)) { //To avoid boundary errors
+        if (d <= 0) {
+            d = d + inc_U;
+            if (!main_axis_Y) x = x + 1;
+            else y = y + dir_Y;
+
+        }
+        else {
+            d = d + inc_M;
+            x = x + 1;
+            y = y + dir_Y;
+        }
+        //Test if any value is in the boundary of the triangle
+        if (table[y].minX > x)
+            table[y].minX = x;
+        if (table[y].maxX < x)
+            table[y].maxX = x;
+    }
 }
