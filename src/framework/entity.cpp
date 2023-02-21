@@ -30,7 +30,8 @@ Entity::~Entity() {
 //Render function to render mesh object
 void Entity::Render(Image* framebuffer, Camera* camera, const Color& c, FloatImage* zBuffer, int type) {
     
-    if (type = NORMAL_REND_TYPE){
+   
+    if (type == NORMAL_REND_TYPE){
         std::vector<Vector3> vertices = mesh->GetVertices();
 
         for (int i = 0; i < (vertices.size()-3); i+=3) {
@@ -74,7 +75,8 @@ void Entity::Render(Image* framebuffer, Camera* camera, const Color& c, FloatIma
                     framebuffer->DrawLineBresenham(v3.x, v3.y, v1.x, v1.y, c);
                     
                 }else if (rMode == eRenderMode::TRIANGLES_INTERPOLATED){
-                    framebuffer->DrawTriangleInterpolated(v1, v2, v3, Color::RED, Color::BLUE, Color::GREEN,0);
+                    std::vector<Vector2> uvs = mesh->GetUVs();
+                    framebuffer->DrawTriangleInterpolated(v1, v2, v3, Color::RED, Color::BLUE, Color::GREEN,0,uvs[i],uvs[i+1],uvs[1+2]);
                     
                 }
                 
@@ -82,6 +84,7 @@ void Entity::Render(Image* framebuffer, Camera* camera, const Color& c, FloatIma
         }
     }else if (type == ZBUFFER_REND_TYPE){
         
+        //init zBuffer
         for (int i = 0; i < zBuffer->width; i++) {
             for (int j = 0; j < zBuffer->height; j++) {
                 zBuffer->SetPixel(i, j, std::numeric_limits<float>::max());
@@ -132,7 +135,8 @@ void Entity::Render(Image* framebuffer, Camera* camera, const Color& c, FloatIma
                     framebuffer->DrawLineBresenham(v3.x, v3.y, v1.x, v1.y, c);
                     
                 }else if (rMode == eRenderMode::TRIANGLES_INTERPOLATED){
-                    framebuffer->DrawTriangleInterpolated(v1, v2, v3, Color::RED, Color::BLUE, Color::GREEN,0);
+                    std::vector<Vector2> uvs = mesh->GetUVs();
+                    framebuffer->DrawTriangleInterpolated(v1, v2, v3, Color::RED, Color::BLUE, Color::GREEN,0,uvs[i],uvs[i+1],uvs[1+2]);
                     
                 }
                 

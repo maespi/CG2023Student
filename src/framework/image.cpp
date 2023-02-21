@@ -564,9 +564,11 @@ void Image::ScanLineBresenham(int x0, int y0, int x1, int y1, std::vector<imageC
 }
 
 
-void Image::DrawTriangleInterpolated(const Vector3 &p0, const Vector3 &p1, const Vector3 &p2, const Color &c0, const Color &c1, const Color &c2, FloatImage* zbuffer){
+void Image::DrawTriangleInterpolated(const Vector3 &p0, const Vector3 &p1, const Vector3 &p2, const Color &c0, const Color &c1, const Color &c2, FloatImage* zbuffer, Vector2 uv_a, Vector2 uv_b, Vector2 uv_c){
+    
     std::vector<imageCell> AET;
     AET.assign(this->height - 1, imageCell(width,0));
+    
     ScanLineBresenham(p0.x, p0.y, p1.x, p1.y, AET);
     ScanLineBresenham(p1.x, p1.y, p2.x, p2.y, AET);
     ScanLineBresenham(p2.x, p2.y, p0.x, p0.y, AET);
@@ -578,7 +580,6 @@ void Image::DrawTriangleInterpolated(const Vector3 &p0, const Vector3 &p1, const
     if (p2.y < minY) minY = p2.y;
     
     
-
     //Fill Row
     for (float i = maxY; i > minY; i--) {
         if (AET[i].minX <= AET[i].maxX) {
@@ -586,7 +587,6 @@ void Image::DrawTriangleInterpolated(const Vector3 &p0, const Vector3 &p1, const
                 Vector3 p = { i,n,0 };
                 Vector3 v0 = p1-p0;
                 Vector3 v1 = p2-p0;
-                //Vector3 p = u*p0 + v*p1 + w*p2;
                 Vector3 v2 = p-p0;
                 
                 float d00 = v0.Dot(v0);
@@ -599,9 +599,34 @@ void Image::DrawTriangleInterpolated(const Vector3 &p0, const Vector3 &p1, const
                 float w = (d00 * d21 - d01 * d20) / denom;
                 float u = 1.0 - v - w;
                 
+                float dp = p0.z*u + p1.z*v * p2.z*w;
+                
                 Color c = c0*u + c1*v + c2*w;
                 
+                float uvy_2 = ((uv_b.y+1) /2)*height;
+                float uvx = 1-(u *uv_a.x + v*uv_b.x + w*uv_c.x);
+                float uvy = 1-(u*uv_a.y + v*uv_b.y + w*uv_c.y);
+                
                 SetPixelSafe(n, i, c);
+                
+                
+                
+                /*if(zbuffer->GetPixel(i,n)>dp){
+                    if(n<this->height && n>= 0 && i<this->width && i>= 0){
+                        zbuffer->SetPixel(i, n, dp);
+                        Color c = c0*u + c1*v + c2*w;
+                        SetPixelSafe(i, n, c);
+                    }else{
+                        float uvx = a.x*u + b.x*v + c.x*w;
+                        float uvy = a.y*u + b.y*v + c.y*w;
+                        
+                        //Color c = texture->GetPixel(uvx, uvy);
+                        //SetPixelSafe(i, n, c);
+                        
+                    }
+                }
+                 */
+                
             }
         }
     }

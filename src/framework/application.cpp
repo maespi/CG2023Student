@@ -9,8 +9,8 @@ std::vector<Color> entities_color;
 Camera c;
 int type_c = -1;
 Vector3 lukat_x = Vector3(0.5, 0.25, 1);    //Camera position centered on images
-int near_p = 0;
-int far_p = 0;
+float near_p = 0;
+float far_p = 0;
 
 
 //if you de-comment the lines: 32,38,45 you'll se the animation.
@@ -41,25 +41,27 @@ void Application::Init(void)
 
     
     
-    //Mesh* mesh1 = new Mesh();
-    //mesh1->LoadOBJ("../res/meshes/lee.obj");
-    //Mesh* mesh2 = new Mesh();
-    //mesh2->LoadOBJ("../res/meshes/cleo.obj");
+    /*Mesh* mesh1 = new Mesh();
+    mesh1->LoadOBJ("../res/meshes/lee.obj");
+    Mesh* mesh2 = new Mesh();
+    mesh2->LoadOBJ("../res/meshes/cleo.obj");
+     */
     Mesh* mesh3 = new Mesh();
     mesh3->LoadOBJ("../res/meshes/anna.obj");
 
-    //Entity* e1 = new Entity(mesh1);
-    //e1->model.TranslateLocal(1.2, .35, -1.5);
-    //e1->setMode(eRenderMode::TRIANGLES);
-    //entities.push_back(e1);
-    //entities_color.push_back(Color::RED);
+    /*Entity* e1 = new Entity(mesh1);
+    e1->model.TranslateLocal(1.2, .35, -1.5);
+    e1->setMode(eRenderMode::TRIANGLES);
+    entities.push_back(e1);
+    entities_color.push_back(Color::RED);
 
-    /*Entity* e2 = new Entity(mesh2);
+    Entity* e2 = new Entity(mesh2);
     e2->setMode(eRenderMode::TRIANGLES);
     e2->model.TranslateLocal(.2, .25, -1);
     entities.push_back(e2);
     entities_color.push_back(Color::BLUE);
      */
+     
 
     Entity* e3 = new Entity(mesh3);
     e3->model.TranslateLocal(.6, .5, -1);
@@ -104,13 +106,13 @@ void Application::OnKeyPressed( SDL_KeyboardEvent event )
         case SDLK_RIGHT://look right
             c.center.x += 0.05;
             c.UpdateViewMatrix();
-
             break;
+            
         case SDLK_LEFT://look left
             c.center.x -= 0.05;
             c.UpdateViewMatrix();
-
             break;
+            
         case SDLK_UP://zoom in
             c.fov-=0.1;
             c.UpdateProjectionMatrix();
