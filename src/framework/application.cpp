@@ -41,28 +41,29 @@ void Application::Init(void)
 
     
     
-    Mesh* mesh1 = new Mesh();
-    mesh1->LoadOBJ("../res/meshes/lee.obj");
-    Mesh* mesh2 = new Mesh();
-    mesh2->LoadOBJ("../res/meshes/cleo.obj");
+    //Mesh* mesh1 = new Mesh();
+    //mesh1->LoadOBJ("../res/meshes/lee.obj");
+    //Mesh* mesh2 = new Mesh();
+    //mesh2->LoadOBJ("../res/meshes/cleo.obj");
     Mesh* mesh3 = new Mesh();
     mesh3->LoadOBJ("../res/meshes/anna.obj");
 
-    Entity* e1 = new Entity(mesh1);
-    e1->model.TranslateLocal(1.2, .35, -1.5);
-    e1->setMode(eRenderMode::TRIANGLES);
-    entities.push_back(e1);
-    entities_color.push_back(Color::RED);
+    //Entity* e1 = new Entity(mesh1);
+    //e1->model.TranslateLocal(1.2, .35, -1.5);
+    //e1->setMode(eRenderMode::TRIANGLES);
+    //entities.push_back(e1);
+    //entities_color.push_back(Color::RED);
 
-    Entity* e2 = new Entity(mesh3);
+    /*Entity* e2 = new Entity(mesh2);
     e2->setMode(eRenderMode::TRIANGLES);
     e2->model.TranslateLocal(.2, .25, -1);
     entities.push_back(e2);
     entities_color.push_back(Color::BLUE);
+     */
 
-    Entity* e3 = new Entity(mesh2);
+    Entity* e3 = new Entity(mesh3);
     e3->model.TranslateLocal(.6, .5, -1);
-    e3->setMode(eRenderMode::TRIANGLES);
+    e3->setMode(eRenderMode::TRIANGLES_INTERPOLATED);
     entities.push_back(e3);
     entities_color.push_back(Color::WHITE);
 
@@ -74,9 +75,8 @@ void Application::Init(void)
 // Render one frame
 void Application::Render(void)
 {
-    
     for (int i = 0; i < entities.size(); i++) {
-        entities[i]->Render(&framebuffer, &c, (entities_color[i]));
+        entities[i]->Render(&framebuffer, &c, (entities_color[i]), 0, NORMAL_REND_TYPE);
     }
 
     framebuffer.Render();
@@ -163,6 +163,18 @@ void Application::OnKeyPressed( SDL_KeyboardEvent event )
         case SDLK_p://set perspective view
             c.type = c.PERSPECTIVE;
             c.UpdateProjectionMatrix();
+            break;
+            
+        case SDLK_c://Toggle (activate/deactivate) between plain color/interpolated vertex colors
+            
+            break;
+            
+        case SDLK_z://Toggle occlusions
+            
+            break;
+            
+        case SDLK_t://Toggle draw mesh with textures
+            
             break;
             
         case SDLK_ESCAPE:

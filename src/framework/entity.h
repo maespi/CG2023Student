@@ -2,9 +2,13 @@
 #include "mesh.h"
 #include "image.h"
 
+#define NORMAL_REND_TYPE 06440
+#define ZBUFFER_REND_TYPE 06450
+
+
 //Enumeration Draw Tipe
 enum class eRenderMode {
-
+    
 	POINTCLOUD,
 	WIREFRAME,
 	TRIANGLES,
@@ -17,7 +21,6 @@ class Entity
 public:
 	Mesh* mesh;
 	Matrix44 model;
-
 
 	//Var to identify renderization form
 	eRenderMode rMode;
@@ -39,7 +42,7 @@ public:
 	eRenderMode getMode() { return rMode; }
 
 	//Render Function
-    void Render(Image* framebuffer, Camera* camera, const Color& c);
+    void Render(Image* framebuffer, Camera* camera, const Color& c, FloatImage* zBuffer, int type);
     void Update(float sec, int type);
 };
 

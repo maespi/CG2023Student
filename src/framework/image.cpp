@@ -331,7 +331,6 @@ void Image::DrawLineDDA(int x0, int y0, int x1, int y1, const Color& c) {
     }
 }
 
-//TODO:Create a method in the Image class that draws lines using the efficient Bresenham lines algorithm (L1-3.2)
 void Image::DrawLineBresenham(int x0, int y0, int x1, int y1, const Color& c) {
 
     //To flip the start-end points to calculate only octants 1,2,7,8
@@ -561,5 +560,49 @@ void Image::ScanLineBresenham(int x0, int y0, int x1, int y1, std::vector<imageC
             table[y].minX = x;
         if (table[y].maxX < x)
             table[y].maxX = x;
+    }
+}
+
+
+void Image::DrawTriangleInterpolated(const Vector3 &p0, const Vector3 &p1, const Vector3 &p2, const Color &c0, const Color &c1, const Color &c2, FloatImage* zbuffer){
+    std::vector<imageCell> AET;
+    AET.assign(this->height - 1, imageCell(width,0));
+    ScanLineBresenham(p0.x, p0.y, p1.x, p1.y, AET);
+    ScanLineBresenham(p1.x, p1.y, p2.x, p2.y, AET);
+    ScanLineBresenham(p2.x, p2.y, p0.x, p0.y, AET);
+    
+    //Scan max and min Y values
+    int maxY = (p0.y > p1.y) ? p0.y : p1.y;
+    if(p2.y > maxY) maxY = p2.y;
+    int minY = (p0.y > p1.y) ? p1.y : p0.y;
+    if (p2.y < minY) minY = p2.y;
+    
+    
+
+    //Fill Row
+    for (float i = maxY; i > minY; i--) {
+        if (AET[i].minX <= AET[i].maxX) {
+            for (float n = AET[i].minX; n < AET[i].maxX; n++) {
+                Vector3 p = { i,n,0 };
+                Vector3 v0 = p1-p0;
+                Vector3 v1 = p2-p0;
+                //Vector3 p = u*p0 + v*p1 + w*p2;
+                Vector3 v2 = p-p0;
+                
+                float d00 = v0.Dot(v0);
+                float d01 = v0.Dot(v1);
+                float d11 = v1.Dot(v1);
+                float d20 = v2.Dot(v0);
+                float d21 = v2.Dot(v1);
+                float denom = d00 * d11 - d01 * d01;
+                float v = (d11 * d20 - d01 * d21) / denom;
+                float w = (d00 * d21 - d01 * d20) / denom;
+                float u = 1.0 - v - w;
+                
+                Color c = c0*u + c1*v + c2*w;
+                
+                SetPixelSafe(n, i, c);
+            }
+        }
     }
 }

@@ -103,6 +103,10 @@ public:
 
     //Bresenham algorithm to compute min and max x of a triangle
     void ScanLineBresenham(int x0, int y0, int x1, int y1, std::vector<imageCell>& table);
+    
+    //Draw triangles using barycentric interpolation
+    void DrawTriangleInterpolated(const Vector3 &p0, const Vector3 &p1, const Vector3 &p2, const Color &c0, const Color &c1, const Color &c2, FloatImage* zbuffer);
+
 
     // Used to easy code
     #ifndef IGNORE_LAMBDAS
