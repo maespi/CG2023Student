@@ -21,6 +21,7 @@ class Entity
 public:
 	Mesh* mesh;
 	Matrix44 model;
+    Image* texture;
 
 	//Var to identify renderization form
 	eRenderMode rMode;
@@ -42,7 +43,7 @@ public:
 	eRenderMode getMode() { return rMode; }
 
 	//Render Function
-    void Render(Image* framebuffer, Camera* camera, const Color& c, FloatImage* zBuffer, int type);
+    void Render(Image* framebuffer, Camera* camera, const Color& c, FloatImage* zBuffer, int type, Image* texture);
     void Update(float sec, int type);
 };
 

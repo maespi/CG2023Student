@@ -1,6 +1,8 @@
 #include "entity.h"
 #include "mesh.h"
 #include "framework.h"
+#include <iostream>
+
 
 
 
@@ -28,7 +30,7 @@ Entity::~Entity() {
 }
 
 //Render function to render mesh object
-void Entity::Render(Image* framebuffer, Camera* camera, const Color& c, FloatImage* zBuffer, int type) {
+void Entity::Render(Image* framebuffer, Camera* camera, const Color& c, FloatImage* zBuffer, int type, Image* texture) {
     
    
     if (type == NORMAL_REND_TYPE){
@@ -76,20 +78,21 @@ void Entity::Render(Image* framebuffer, Camera* camera, const Color& c, FloatIma
                     
                 }else if (rMode == eRenderMode::TRIANGLES_INTERPOLATED){
                     std::vector<Vector2> uvs = mesh->GetUVs();
-                    framebuffer->DrawTriangleInterpolated(v1, v2, v3, Color::RED, Color::BLUE, Color::GREEN,0,uvs[i],uvs[i+1],uvs[1+2]);
+                    framebuffer->DrawTriangleInterpolated(v1, v2, v3, Color::RED, Color::BLUE, Color::GREEN,zBuffer,texture,uvs[i],uvs[i+1],uvs[1+2]);
                     
                 }
                 
             }
         }
     }else if (type == ZBUFFER_REND_TYPE){
-        
         //init zBuffer
         for (int i = 0; i < zBuffer->width; i++) {
             for (int j = 0; j < zBuffer->height; j++) {
                 zBuffer->SetPixel(i, j, std::numeric_limits<float>::max());
+                //std::cout<< i+"\n" ;
             }
         }
+         
         
         std::vector<Vector3> vertices = mesh->GetVertices();
 
@@ -136,7 +139,7 @@ void Entity::Render(Image* framebuffer, Camera* camera, const Color& c, FloatIma
                     
                 }else if (rMode == eRenderMode::TRIANGLES_INTERPOLATED){
                     std::vector<Vector2> uvs = mesh->GetUVs();
-                    framebuffer->DrawTriangleInterpolated(v1, v2, v3, Color::RED, Color::BLUE, Color::GREEN,0,uvs[i],uvs[i+1],uvs[1+2]);
+                    framebuffer->DrawTriangleInterpolated(v1, v2, v3, Color::RED, Color::BLUE, Color::GREEN, zBuffer,texture,uvs[i],uvs[i+1],uvs[1+2]);
                     
                 }
                 

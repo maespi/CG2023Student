@@ -68,6 +68,7 @@ public:
 
 	// CPU Global framebuffer
 	Image framebuffer;
+    FloatImage zbuffer;
 
 	// Constructor and main methods
 	Application(const char* caption, int width, int height);

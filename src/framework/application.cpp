@@ -28,6 +28,7 @@ Application::Application(const char* caption, int width, int height)
     this->keystate = SDL_GetKeyboardState(nullptr);
 
     this->framebuffer.Resize(w, h);
+    this->zbuffer.Resize(w, h);
 }
 
 Application::~Application()
@@ -48,6 +49,8 @@ void Application::Init(void)
      */
     Mesh* mesh3 = new Mesh();
     mesh3->LoadOBJ("../res/meshes/anna.obj");
+    Image* texture3;
+    texture3->LoadTGA("../res/textures/anna_color_specular.tga");
 
     /*Entity* e1 = new Entity(mesh1);
     e1->model.TranslateLocal(1.2, .35, -1.5);
@@ -64,7 +67,8 @@ void Application::Init(void)
      
 
     Entity* e3 = new Entity(mesh3);
-    e3->model.TranslateLocal(.6, .5, -1);
+    //e3->model.TranslateLocal(.6, .5, -1);
+    e3->texture = texture3;
     e3->setMode(eRenderMode::TRIANGLES_INTERPOLATED);
     entities.push_back(e3);
     entities_color.push_back(Color::WHITE);
@@ -78,9 +82,8 @@ void Application::Init(void)
 void Application::Render(void)
 {
     for (int i = 0; i < entities.size(); i++) {
-        entities[i]->Render(&framebuffer, &c, (entities_color[i]), 0, NORMAL_REND_TYPE);
+        entities[i]->Render(&framebuffer, &c, (entities_color[i]), &zbuffer, ZBUFFER_REND_TYPE, entities[i]->texture);
     }
-
     framebuffer.Render();
 }
 

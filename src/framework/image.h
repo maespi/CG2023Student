@@ -31,13 +31,14 @@ class Image
         unsigned char* data; // Bytes with the pixel information
     } TGAInfo;
 
-    struct imageCell {//Struct to save min and max X value of traingle line
+    struct imageCell {//Struct to save min and max X value of triangle line
         int minX;
         int maxX;
         imageCell(int min, int max) {
             minX = min;
             maxX = max;
         }
+         
     };
 
 public:
@@ -105,7 +106,7 @@ public:
     void ScanLineBresenham(int x0, int y0, int x1, int y1, std::vector<imageCell>& table);
     
     //Draw triangles using barycentric interpolation
-    void DrawTriangleInterpolated(const Vector3 &p0, const Vector3 &p1, const Vector3 &p2, const Color &c0, const Color &c1, const Color &c2, FloatImage* zbuffer, Vector2 a, Vector2 b, Vector2 c);
+    void DrawTriangleInterpolated(const Vector3 &p0, const Vector3 &p1, const Vector3 &p2, const Color &c0, const Color &c1, const Color &c2, FloatImage* zbuffer, Image * texture, const Vector2 &uv0, const Vector2 &uv1, const Vector2 &uv2);
 
     // Used to easy code
     #ifndef IGNORE_LAMBDAS
