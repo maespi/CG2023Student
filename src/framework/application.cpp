@@ -43,18 +43,25 @@ void Application::Init(void)
 
     
     
-    /*Mesh* mesh1 = new Mesh();
+    Mesh* mesh1 = new Mesh();
     mesh1->LoadOBJ("../res/meshes/lee.obj");
     Mesh* mesh2 = new Mesh();
     mesh2->LoadOBJ("../res/meshes/cleo.obj");
-     */
+     
+     
 
     Mesh* mesh3 = new Mesh();
     mesh3->LoadOBJ("../res/meshes/lee.obj");
     Image* texture3 = new Image(this->window_width, this->window_height);
-    texture3->LoadTGA("../res/textures/lee_color_specular.tga");
+    texture3->LoadTGA("../res/textures/anna_color_specular.tga");
+    
+    Image* texture2 = new Image(this->window_width, this->window_height);
+    texture2->LoadTGA("../res/textures/cleo_color_specular.tga");
+    
+    Image* texture1 = new Image(this->window_width, this->window_height);
+    texture1->LoadTGA("../res/textures/lee_color_specular.tga");
 
-    /*Entity* e1 = new Entity(mesh1);
+    Entity* e1 = new Entity(mesh1);
     e1->model.TranslateLocal(1.2, .35, -1.5);
     e1->setMode(eRenderMode::TRIANGLES);
     entities.push_back(e1);
@@ -65,17 +72,22 @@ void Application::Init(void)
     e2->model.TranslateLocal(.2, .25, -1);
     entities.push_back(e2);
     entities_color.push_back(Color::BLUE);
-     */
+     
      
 
     Entity* e3 = new Entity(mesh3);
-    //e3->model.TranslateLocal(.6, .5, -1);
+    e3->model.TranslateLocal(.6, .5, -1);
     e3->texture = texture3;
+    e1->texture = texture1;
+    e2->texture = texture2;
+    e1->setMode(eRenderMode::TRIANGLES_INTERPOLATED);
+    e2->setMode(eRenderMode::TRIANGLES_INTERPOLATED);
     e3->setMode(eRenderMode::TRIANGLES_INTERPOLATED);
 
     entities.push_back(e3);
     entities_color.push_back(Color::WHITE);
     entities_text.push_back(texture3);
+    
 
     c = Camera();
     c.SetPerspective(45, 1, .01, 100);

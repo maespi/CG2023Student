@@ -583,6 +583,7 @@ void Image::DrawTriangleInterpolated(const Vector3 &p0, const Vector3 &p1, const
     //Direction and vectors from p0
     Vector2 v0 = Vector2(p1.x - p0.x, p1.y - p0.y);
     Vector2 v1 = Vector2(p2.x - p0.x, p2.y - p0.y);
+    
     float d00 = v0.Dot(v0);
     float d01 = v0.Dot(v1);
     float d11 = v1.Dot(v1);
@@ -598,40 +599,8 @@ void Image::DrawTriangleInterpolated(const Vector3 &p0, const Vector3 &p1, const
             float d21 = v2.Dot(v1);
             float v = (d11 * d20 - d01 * d21) / denom;
             float w = (d00 * d21 - d01 * d20) / denom;
-            
-            if (v < 0 || v > 1) {
-                if (v < 0) {
-                    v = 0;
-                } else if (v > 1) {
-                    v = 1;
-                }
-            }
-            
-            if (w < 0 || w > 1) {
-                if (w < 0) {
-                    w = 0;
-                } else if (w > 1) {
-                    w = 1;
-                }
-            }
-
             float u = 1.0 - v - w;
-            
-            if (u < 0 || u > 1) {
-                if (u < 0) {
-                    u = 0;
-                } else if (u > 1) {
-                    u = 1;
-                }
-            }
-
-            if ((u + v + w) != 1) {
-                u = u / (u + w + v);
-                v = v / (u + w + v);
-                w = w / (u + w + v);
-            }
-            
-            float dp = p0.z*u + p1.z*v * p2.z*w;   
+            float dp = p0.z*u + p1.z*v * p2.z*w;
             Color c = c0*u + c1*v + c2*w;
   
             if (texture == nullptr) {
