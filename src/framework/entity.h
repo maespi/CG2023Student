@@ -22,6 +22,7 @@ public:
 	Mesh* mesh;
 	Matrix44 model;
     Image* texture;
+	bool occlusion;
 
 	//Var to identify renderization form
 	eRenderMode rMode;
@@ -30,6 +31,10 @@ public:
 	Entity();
 	Entity(Mesh*);
 	Entity(const char*);
+
+	Entity(Mesh* m, Image* texture);
+
+	Entity(Mesh* m, Image* texture, eRenderMode mod);
 
 	//Destructor
 	~Entity();
@@ -41,9 +46,11 @@ public:
 	void setMesh(Mesh* m) { mesh = m; }
 	void setMode(eRenderMode a) { rMode = a; }
 	eRenderMode getMode() { return rMode; }
+	void setTexture(Image* img) { texture = img; }
+	Image* getTexture() { return texture; }
 
 	//Render Function
-    void Render(Image* framebuffer, Camera* camera, const Color& c, FloatImage* zBuffer, int type, Image* texture);
+    void Render(Image* framebuffer, Camera* camera, const Color& c, FloatImage* zBuffer);
     void Update(float sec, int type);
 };
 

@@ -565,11 +565,11 @@ void Image::ScanLineBresenham(int x0, int y0, int x1, int y1, std::vector<imageC
 }
 
 
-void Image::DrawTriangleInterpolated(const Vector3 &p0, const Vector3 &p1, const Vector3 &p2, const Color &c0, const Color &c1, const Color &c2, FloatImage* zbuffer, Image* texture, const Vector2 &uv0, const Vector2 &uv1, const Vector2 &uv2){
+void Image::DrawTriangleInterpolated(const Vector3 &p0, const Vector3 &p1, const Vector3 &p2, const Color &c0, const Color &c1, const Color &c2, FloatImage* zbuffer, Image* texture, const Vector2 &uv0, const Vector2 &uv1, const Vector2 &uv2, bool occlusion){
     
     std::vector<imageCell> AET;
     AET.assign(this->height - 1, imageCell(width,0));
-    
+
     ScanLineBresenham(p0.x, p0.y, p1.x, p1.y, AET);
     ScanLineBresenham(p1.x, p1.y, p2.x, p2.y, AET);
     ScanLineBresenham(p2.x, p2.y, p0.x, p0.y, AET);
@@ -580,84 +580,71 @@ void Image::DrawTriangleInterpolated(const Vector3 &p0, const Vector3 &p1, const
     int minY = (p0.y > p1.y) ? p1.y : p0.y;
     if (p2.y < minY) minY = p2.y;
     
+    //Direction and vectors from p0
+    Vector2 v0 = Vector2(p1.x - p0.x, p1.y - p0.y);
+    Vector2 v1 = Vector2(p2.x - p0.x, p2.y - p0.y);
+    float d00 = v0.Dot(v0);
+    float d01 = v0.Dot(v1);
+    float d11 = v1.Dot(v1);
+    float denom = d00 * d11 - d01 * d01;
     
     //Fill Row
     for (float i = minY; i < maxY; i++) {
         for (float n = AET[i].minX; n < AET[i].maxX; n++) {
             
-            Vector2 v0(p1.x - p0.x, p1.y - p0.y);
-            Vector2 v1(p2.x - p0.x, p2.y - p0.y);
-            Vector2 v2(n - p0.x, i - p0.y);
+            Vector2 v2 = Vector2(n - p0.x, i - p0.y);
                 
-            float d00 = v0.Dot(v0);
-            float d01 = v0.Dot(v1);
-            float d11 = v1.Dot(v1);
             float d20 = v2.Dot(v0);
             float d21 = v2.Dot(v1);
-            float denom = d00 * d11 - d01 * d01;
             float v = (d11 * d20 - d01 * d21) / denom;
+            float w = (d00 * d21 - d01 * d20) / denom;
             
-            
-            if (v < 0 && v > 1) {
-                if (v <= 0) {
+            if (v < 0 || v > 1) {
+                if (v < 0) {
                     v = 0;
-                } else if (v >= 1) {
+                } else if (v > 1) {
                     v = 1;
                 }
             }
-
-            float w = (d00 * d21 - d01 * d20) / denom;
-
-            if (w < 0 && w > 1) {
-                if (w <= 0) {
+            
+            if (w < 0 || w > 1) {
+                if (w < 0) {
                     w = 0;
-                } else if (w >= 1) {
+                } else if (w > 1) {
                     w = 1;
                 }
             }
 
-            float u = 1 - v - w;
-
-            if (u < 0 && u > 1) {
-                if (u <= 0) {
+            float u = 1.0 - v - w;
+            
+            if (u < 0 || u > 1) {
+                if (u < 0) {
                     u = 0;
-                } else if (u >= 1) {
+                } else if (u > 1) {
                     u = 1;
                 }
             }
 
-            if (u + v + w != 1) {
+            if ((u + v + w) != 1) {
                 u = u / (u + w + v);
                 v = v / (u + w + v);
                 w = w / (u + w + v);
             }
             
-            float dp = p0.z*u + p1.z*v * p2.z*w;
-            
+            float dp = p0.z*u + p1.z*v * p2.z*w;   
             Color c = c0*u + c1*v + c2*w;
-            
-            float uvy_2 = ((uv1.y+1) /2)*height;
-            float uvx = 1-(u *uv0.x + v*uv1.x + w*uv2.x);
-            float uvy = 1-(u*uv0.y + v*uv1.y + w*uv2.y);
-            
-            SetPixelSafe(n, i, c);
-            
-            
+  
             if (texture == nullptr) {
-                SetPixelSafe(n, i, c);
-                zbuffer->SetPixel(n, i, dp);
+                if (dp < zbuffer->GetPixel(n, i) || !occlusion) {
+                    SetPixelSafe(n, i, c);
+                    zbuffer->SetPixel(n, i, dp);
+                }
+            }else {
 
-            }
+                float uv_x = (u * uv0.x + v * uv1.x + w * uv2.x) * (width - 1);
+                float uv_y = (u * uv0.y + v * uv1.y + w * uv2.y) * (height - 1);
 
-            else {
-                float uv2_y = ((uv2.y + 1) / 2) * (height);
-                float uv_x = 1 - (u * uv0.x + v * uv1.x + w * uv2.x);
-                float uv_y = 1 - (u * uv0.y + v * uv1.y + w * uv2.y);
-
-                uv_x = uv_x * (width-1);
-                uv_y = uv_y * (height-1);
-
-                if (dp < zbuffer->GetPixel(n, i)) {
+                if (dp < zbuffer->GetPixel(n, i) || !occlusion) {
                     Color uv_c = texture->GetPixelSafe(uv_x, uv_y);
                     SetPixelSafe(n, i, uv_c);
                     zbuffer->SetPixel(n, i, dp);

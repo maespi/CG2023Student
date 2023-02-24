@@ -6,6 +6,7 @@
 
 std::vector<Entity*> entities;
 std::vector<Color> entities_color;
+std::vector<Image*> entities_text;
 Camera c;
 int type_c = -1;
 Vector3 lukat_x = Vector3(0.5, 0.25, 1);    //Camera position centered on images
@@ -47,10 +48,11 @@ void Application::Init(void)
     Mesh* mesh2 = new Mesh();
     mesh2->LoadOBJ("../res/meshes/cleo.obj");
      */
+
     Mesh* mesh3 = new Mesh();
-    mesh3->LoadOBJ("../res/meshes/anna.obj");
-    Image* texture3;
-    texture3->LoadTGA("../res/textures/anna_color_specular.tga");
+    mesh3->LoadOBJ("../res/meshes/lee.obj");
+    Image* texture3 = new Image(this->window_width, this->window_height);
+    texture3->LoadTGA("../res/textures/lee_color_specular.tga");
 
     /*Entity* e1 = new Entity(mesh1);
     e1->model.TranslateLocal(1.2, .35, -1.5);
@@ -70,8 +72,10 @@ void Application::Init(void)
     //e3->model.TranslateLocal(.6, .5, -1);
     e3->texture = texture3;
     e3->setMode(eRenderMode::TRIANGLES_INTERPOLATED);
+
     entities.push_back(e3);
     entities_color.push_back(Color::WHITE);
+    entities_text.push_back(texture3);
 
     c = Camera();
     c.SetPerspective(45, 1, .01, 100);
@@ -81,8 +85,9 @@ void Application::Init(void)
 // Render one frame
 void Application::Render(void)
 {
+
     for (int i = 0; i < entities.size(); i++) {
-        entities[i]->Render(&framebuffer, &c, (entities_color[i]), &zbuffer, ZBUFFER_REND_TYPE, entities[i]->texture);
+        entities[i]->Render(&framebuffer, &c, entities_color[i], &zbuffer);
     }
     framebuffer.Render();
 }
@@ -171,15 +176,32 @@ void Application::OnKeyPressed( SDL_KeyboardEvent event )
             break;
             
         case SDLK_c://Toggle (activate/deactivate) between plain color/interpolated vertex colors
-            
+            for (int i = 0; i < entities.size(); i++) {
+                if(entities[i]->getMode() == eRenderMode::TRIANGLES)
+                    entities[i]->setMode(eRenderMode::TRIANGLES_INTERPOLATED);
+                else
+                {
+                    entities[i]->setMode(eRenderMode::TRIANGLES);
+                }
+            }
             break;
             
         case SDLK_z://Toggle occlusions
-            
+            for (int i = 0; i < entities.size(); i++) {
+                entities[i]->occlusion = !entities[i]->occlusion;
+            }
             break;
             
         case SDLK_t://Toggle draw mesh with textures
-            
+            for (int i = 0; i < entities.size(); i++) {
+                if (entities[i]->texture != nullptr) {
+                    entities[i]->setTexture(nullptr);
+                }
+                else
+                {
+                    entities[i]->setTexture(entities_text[i]);
+                }
+            }
             break;
             
         case SDLK_ESCAPE:
