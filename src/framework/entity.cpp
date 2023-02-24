@@ -35,15 +35,15 @@ Entity::Entity(Mesh* m, Image* texture) {
     mesh = m;
     model.SetIdentity();
     rMode = eRenderMode::WIREFRAME;
-    texture = texture;
+    this->texture = texture;
     occlusion = false;
 }
 
-Entity::Entity(Mesh* m, Image* texture = NULL, eRenderMode mod = eRenderMode::WIREFRAME) {
+Entity::Entity(Mesh* m, Image* texture, eRenderMode mod) {
     mesh = m;
     model.SetIdentity();
     rMode = mod;
-    texture = texture;
+    this->texture = texture;
     occlusion = false;
 }
 
