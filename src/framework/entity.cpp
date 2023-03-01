@@ -55,7 +55,6 @@ Entity::~Entity() {
 void Entity::Render(Image* framebuffer, Camera* camera, const Color& c, FloatImage* zBuffer) {
 
     //init zBuffer
-    zBuffer->Fill(std::numeric_limits<float>::max());
 
     std::vector<Vector3> vertices = mesh->GetVertices();
 

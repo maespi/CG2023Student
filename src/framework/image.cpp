@@ -491,7 +491,7 @@ void FloatImage::Resize(unsigned int width, unsigned int height)
 //Drawing a filled triangle using the Active Edges Table (AET) approach
 void Image::DrawTriangle(const Vector2& p0, const Vector2& p1, const Vector2& p2, const Color& color) {
     std::vector<imageCell> AET;
-    AET.assign(this->height - 1, imageCell(width,0));
+    AET.resize(this->height);
     ScanLineBresenham(p0.x, p0.y, p1.x, p1.y, AET);
     ScanLineBresenham(p1.x, p1.y, p2.x, p2.y, AET);
     ScanLineBresenham(p2.x, p2.y, p0.x, p0.y, AET);
@@ -568,17 +568,11 @@ void Image::ScanLineBresenham(int x0, int y0, int x1, int y1, std::vector<imageC
 void Image::DrawTriangleInterpolated(const Vector3 &p0, const Vector3 &p1, const Vector3 &p2, const Color &c0, const Color &c1, const Color &c2, FloatImage* zbuffer, Image* texture, const Vector2 &uv0, const Vector2 &uv1, const Vector2 &uv2, bool occlusion){
     
     std::vector<imageCell> AET;
-    AET.assign(this->height - 1, imageCell(width,0));
+    AET.resize(this->height);
 
     ScanLineBresenham(p0.x, p0.y, p1.x, p1.y, AET);
     ScanLineBresenham(p1.x, p1.y, p2.x, p2.y, AET);
     ScanLineBresenham(p2.x, p2.y, p0.x, p0.y, AET);
-    
-    //Scan max and min Y values
-    int maxY = (p0.y > p1.y) ? p0.y : p1.y;
-    if(p2.y > maxY) maxY = p2.y;
-    int minY = (p0.y > p1.y) ? p1.y : p0.y;
-    if (p2.y < minY) minY = p2.y;
     
     //Direction and vectors from p0
     Vector2 v0 = Vector2(p1.x - p0.x, p1.y - p0.y);
@@ -590,7 +584,7 @@ void Image::DrawTriangleInterpolated(const Vector3 &p0, const Vector3 &p1, const
     float denom = d00 * d11 - d01 * d01;
     
     //Fill Row
-    for (float i = minY; i < maxY; i++) {
+    for (float i = 0; i < height; i++) {
         for (float n = AET[i].minX; n < AET[i].maxX; n++) {
             
             Vector2 v2 = Vector2(n - p0.x, i - p0.y);
@@ -600,7 +594,7 @@ void Image::DrawTriangleInterpolated(const Vector3 &p0, const Vector3 &p1, const
             float v = (d11 * d20 - d01 * d21) / denom;
             float w = (d00 * d21 - d01 * d20) / denom;
             float u = 1.0 - v - w;
-            float dp = p0.z*u + p1.z*v * p2.z*w;
+            float dp = p0.z*u + p1.z*v + p2.z*w;
             Color c = c0*u + c1*v + c2*w;
   
             if (texture == nullptr) {

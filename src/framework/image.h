@@ -32,12 +32,9 @@ class Image
     } TGAInfo;
 
     struct imageCell {//Struct to save min and max X value of triangle line
-        int minX;
-        int maxX;
-        imageCell(int min, int max) {
-            minX = min;
-            maxX = max;
-        }
+        int minX = INT_MAX;
+        int maxX = INT_MIN;
+   
          
     };
 
