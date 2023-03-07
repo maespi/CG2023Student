@@ -1,4 +1,5 @@
 #include "utils.h"
+#include "GL/glew.h"
 
 #ifdef WIN32
 	#include <windows.h>
@@ -119,6 +120,12 @@ SDL_Window* createWindow(const char* caption, int width, int height )
 	// Create an OpenGL context associated with the window.
 	SDL_GLContext glcontext = SDL_GL_CreateContext(window);
 
+	glewExperimental = true; // Se necesita en el perfil de base.
+	if (glewInit() != GLEW_OK) {
+		fprintf(stderr, "Error initializing GLEW\n");
+		exit(-1);
+	}
+
 	// Set the clear color (the background color)
 	glClearColor(0.0, 0.0, 0.0, 1.0);
 
@@ -189,7 +196,7 @@ void launchLoop(Application* app)
 						break;
 #ifdef WIN32
 					case CDirectoryWatcher::WM_FILE_CHANGED:
-						const char* filename = (const char*)(sdlEvent.text.text);
+						const char* filename = (const char*)(dir_watcher_data.file_name);
 						app->OnFileChanged(filename);
 						break;
 #endif
