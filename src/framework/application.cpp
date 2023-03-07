@@ -2,25 +2,17 @@
 #include "mesh.h"
 #include "shader.h"
 #include "utils.h"
-#include "entity.h"
-#include <GLUT/glut.h>
-#define GL_SILENCE_DEPRECATION
-#include <OpenGL/gl.h>
-#include <GLUT/glut.h>
-
 
 Camera c;
 int type_c = -1;
 Vector3 lukat_x = Vector3(0, 0, 1);
-float near= 0;
-float far = 0;
+float near_f = 0;
+float far_f = 0;
 float near_p = 0;
 float far_p = 0;
 
-Mesh* quad_mesh = new Mesh();
-Shader* shader;
-
-
+Mesh* quad_mesh;
+Shader* shader = new Shader();
 
 
 Application::Application(const char* caption, int width, int height)
@@ -37,7 +29,7 @@ Application::Application(const char* caption, int width, int height)
     this->keystate = SDL_GetKeyboardState(nullptr);
 
     this->framebuffer.Resize(w, h);
-       
+    quad_mesh = new Mesh();
 
 }
 
@@ -51,16 +43,13 @@ void Application::Init(void)
     std::cout << "Initiating app..." << std::endl;
     c = Camera();
     c.SetPerspective(45, 1, .01, 100);
-    c.LookAt(lukat_x, Vector3(near, 0, 0), Vector3::UP);
-    c.LookAt(lukat_x, Vector3(near_p, 0, 0), Vector3::UP);
+    c.LookAt(lukat_x, Vector3(near_f, 0, 0), Vector3::UP);
     
-    shader = Shader::Get("a.vd","a.fs");
-
+    shader->Get("quad.vs","quad.fs");
 }
 
 
 void Application::Render(void){
-    
     int primitive = 0;
     quad_mesh->Render(primitive);
     
@@ -70,15 +59,14 @@ void Application::Render(void){
     
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
     
-    glUseProgram(program_handler);
+    glUseProgram(1);
     
     glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,0,vVertices);
     glEnableVertexAttribArray(0);
     
     glDrawArrays(GL_TRIANGLES, 0, 3);
-    
     glFinish();
-
+ 
     /*
     //Clear the framebuffer and the depth buffer
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

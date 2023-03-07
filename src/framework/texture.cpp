@@ -5,13 +5,14 @@
 #include <iostream> //to output
 #include <cmath>
 
+/*
 #ifndef __APPLE__
 
 //function to create mipmaps using the GPU (much faster)
 typedef void (APIENTRY *glGenerateMipmapEXT_func)( GLenum target );
 glGenerateMipmapEXT_func glGenerateMipmapEXT = NULL;
 #endif
-
+*/
 std::map<std::string, Texture*> Texture::s_Textures;
 
 Texture::Texture()
