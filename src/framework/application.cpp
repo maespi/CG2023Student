@@ -3,6 +3,20 @@
 #include "shader.h"
 #include "utils.h"
 
+//Lab4 declarations:
+
+int mode;
+int opt = 1;
+Mesh* quad_mesh = new Mesh();
+Mesh mesh;
+
+Shader* shader;
+Shader* shader2;
+
+Texture* texture = new Texture();
+
+
+//Camera and lab3 variables:
 Camera c;
 int type_c = -1;
 Vector3 lukat_x = Vector3(0, 0, 1);
@@ -10,9 +24,6 @@ float near_f = 0;
 float far_f = 0;
 float near_p = 0;
 float far_p = 0;
-
-Mesh* quad_mesh;
-Shader* shader = new Shader();
 
 
 Application::Application(const char* caption, int width, int height)
@@ -29,7 +40,6 @@ Application::Application(const char* caption, int width, int height)
     this->keystate = SDL_GetKeyboardState(nullptr);
 
     this->framebuffer.Resize(w, h);
-    quad_mesh = new Mesh();
 
 }
 
@@ -41,43 +51,35 @@ Application::~Application()
 void Application::Init(void)
 {
     std::cout << "Initiating app..." << std::endl;
+    
+    //camera inits
     c = Camera();
     c.SetPerspective(45, 1, .01, 100);
     c.LookAt(lukat_x, Vector3(near_f, 0, 0), Vector3::UP);
     
-    shader->Get("quad.vs","quad.fs");
+    //Lab4 inits
+    texture->Load("images/fruits.png", true);
+    shader = Shader::Get("shaders/quad.vs", "shaders/quad.fs");
+
+    
+    quad_mesh->CreateQuad();
+    
 }
 
 
 void Application::Render(void){
-    int primitive = 0;
-    quad_mesh->Render(primitive);
-    
-    GLfloat vVertices[] = {0.0f, 0.5f, 0.0f, -0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f};
-    
-    glViewport(0, 0, 800, 600);
-    
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
     
-    glUseProgram(1);
+    shader = Shader::Get("shaders/quad.vs", "shaders/quad.fs");
+
+
     
-    glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,0,vVertices);
-    glEnableVertexAttribArray(0);
+    shader->Enable();
+
+    quad_mesh->Render();
+
+    shader->Disable();
     
-    glDrawArrays(GL_TRIANGLES, 0, 3);
-    glFinish();
- 
-    /*
-    //Clear the framebuffer and the depth buffer
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    
-    //Draw scene
-    
-    //Swap between front and back buffer
-    //This method name changes depending on the platform
-    //glutSwapBuffers();
-    glFinish();
-    */
 }
 // Called after render
 void Application::Update(float seconds_elapsed){
