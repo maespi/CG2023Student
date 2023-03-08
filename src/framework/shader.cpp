@@ -76,6 +76,7 @@ Shader* Shader::Get(const char* vsf, const char* psf, const char* macros)
 	if (!sh->Load(vsf, psf, macros))
 		return NULL;
 	s_Shaders[name] = sh;
+    if (sh->compiled == true) printf("Shader->compiled == true\n");
 	return sh;
 }
 

@@ -16,6 +16,8 @@ Shader* shader2;
 Texture* texture = new Texture();
 
 
+
+
 //Camera and lab3 variables:
 Camera c;
 int type_c = -1;
@@ -59,7 +61,7 @@ void Application::Init(void)
     
     //Lab4 inits
     texture->Load("images/fruits.png", true);
-    shader = Shader::Get("shaders/quad.vs", "shaders/quad.fs");
+    //shader = Shader::Get("shaders/quad.vs", "shaders/quad.fs");
 
     
     quad_mesh->CreateQuad();
@@ -70,11 +72,28 @@ void Application::Init(void)
 void Application::Render(void){
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
     
+    
     shader = Shader::Get("shaders/quad.vs", "shaders/quad.fs");
 
 
     
     shader->Enable();
+    
+    float asp = (float)framebuffer.width/(float)framebuffer.height;
+    shader->SetFloat("aspect_ratio", asp);
+    shader->SetFloat("center_y", ((float)framebuffer.height/2));
+    shader->SetFloat("center_x", ((float)framebuffer.width/2));
+    shader->SetFloat("width", ((float)framebuffer.width));
+    shader->SetFloat("height", ((float)framebuffer.height));
+
+                     
+
+                     
+
+    shader->SetFloat("time", time);
+    shader->SetUniform1("opt", opt);
+
+    
 
     quad_mesh->Render();
 
@@ -99,7 +118,34 @@ void Application::OnKeyPressed( SDL_KeyboardEvent event )
         case SDLK_c: //To lock camera
             type_c *= -1;
             break;
-        
+            
+        case SDLK_1:
+            opt = 1;
+            break;
+        case SDLK_2:
+            opt = 2;
+            break;
+        case SDLK_3:
+            opt = 3;
+            break;
+        case SDLK_4:
+            opt = 4;
+            break;
+        case SDLK_5:
+            opt = 5;
+            break;
+        case SDLK_6:
+            opt = 6;
+            break;
+        case SDLK_7:
+            opt = 7;
+            break;
+        case SDLK_8:
+            opt = 8;
+            break;
+        case SDLK_9:
+            opt = 9;
+            break;
     }
 }
 
