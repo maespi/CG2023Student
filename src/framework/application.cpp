@@ -42,8 +42,7 @@ void Application::Init(void)
     c.LookAt( Vector3(0, 0, 1), Vector3(0, 0, 0), Vector3::UP);
     
     //Lab4 inits
-    texture->Load("images/fruits.png", true);
-    //shader = Shader::Get("shaders/quad.vs", "shaders/quad.fs");
+    texture->Load("images/fruits.png");
 
     quad_mesh->CreateQuad();
     
@@ -64,6 +63,7 @@ void Application::Render(void){
     shader->SetFloat("height", ((float)framebuffer.height));    
     shader->SetFloat("time", time);
     shader->SetUniform1("opt", opt);
+    shader->SetTexture("u_texture", texture);
 
     quad_mesh->Render();
 
@@ -83,11 +83,11 @@ void Application::OnKeyPressed( SDL_KeyboardEvent event )
         case SDLK_ESCAPE:
             exit(0);
             break; // ESC key, kill the app
-            
+     /*
         case SDLK_c: //To lock camera
             type_c *= -1;
             break;
-            
+     */       
         case SDLK_1:
             opt = 1;
             break;
@@ -106,14 +106,23 @@ void Application::OnKeyPressed( SDL_KeyboardEvent event )
         case SDLK_6:
             opt = 6;
             break;
-        case SDLK_7:
+        case SDLK_a:
             opt = 7;
             break;
-        case SDLK_8:
+        case SDLK_b:
             opt = 8;
             break;
-        case SDLK_9:
+        case SDLK_c:
             opt = 9;
+            break;
+        case SDLK_d:
+            opt = 10;
+            break;
+        case SDLK_e:
+            opt = 11;
+            break;
+        case SDLK_f:
+            opt = 12;
             break;
     }
 }

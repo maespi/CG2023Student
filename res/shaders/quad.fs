@@ -1,6 +1,7 @@
 varying vec2 v_uv;
 uniform float time;
 uniform int opt;
+uniform sampler2D u_texture;
 uniform float center_x;
 uniform float center_y;
 uniform float aspect_ratio;
@@ -32,11 +33,11 @@ void main()
     vec3 salmon = vec3(1.0, 0.5, 0.5);
     vec3 gold = vec3(1.0, 0.84, 0.0);
 
+    vec4 texture_basic = texture2D(u_texture, v_uv);
     
     if (opt == 1) {
         vec3 ex1_1 = (v_uv.x*navy) + ((1.0-v_uv.x)*beige) + sin(time);
-        gl_FragColor = vec4(ex1_1,1);
-        
+        gl_FragColor = vec4(ex1_1,1);   
         
     }else if (opt == 2){
         float radius;
@@ -45,7 +46,7 @@ void main()
         vec3 ex1_2 = vec3(sin_value, sin_value,sin_value);
         
         gl_FragColor = vec4(ex1_2, 1.0);
-        
+
     }else if (opt == 3){
         vec3 red_mod = sin(v_uv.x*aspect_ratio*10.0*time*0.9+1000.0)*red;
         vec3 blue_mod = sin(v_uv.y*10.0*time*0.9+1000.0)*blue;
@@ -75,4 +76,43 @@ void main()
         gl_FragColor = vec4(final_color, 1.0);
 
     }
+    else if (opt == 5){
+
+        float curve = 0.1 * sin((9.25 * v_uv.x) + (2.0 * time));
+
+        float lineAShape = smoothstep(1.0 - clamp(distance(curve + v_uv.y, 0.5) * 1.0, 0.0, 1.0), 1.0, 0.9999);
+
+        float c = min(mix(1-v_uv.y, v_uv.y, lineAShape),mix(1-v_uv.y, lineAShape-v_uv.y, lineAShape));
+        
+        gl_FragColor = vec4(0, c, 0, 1);
+    }
+    else if (opt == 6){
+
+        float x = step(sin(70*v_uv.x*aspect_ratio),0.5);
+		float y = step(sin(70*v_uv.y),0.5);
+
+        float c = abs(x + y - 1*abs(cos(time)));
+        
+        gl_FragColor = vec4(c, c, c, 1);
+
+	}else if (opt == 7){
+		vec4 color = vec4(texture_basic.gggg);
+
+		gl_FragColor = color;
+
+	}
+	else if(opt == 8) {
+
+		vec4 color = vec4(1-texture_basic.x, 1-texture_basic.y, 1-texture_basic.z, 1-texture_basic.w);
+		gl_FragColor = color;
+
+	}else if(opt == 9) {
+        vec4 color = vec4(texture_basic.y, 1-texture_basic.z, 1-texture_basic.x, 1-texture_basic.w);
+		gl_FragColor = color;
+    }
+    else if(opt == 10) {
+        vec4 color = vec4(texture_basic.y, 1-texture_basic.z, 1-texture_basic.x, 1-texture_basic.w);
+		gl_FragColor = color;
+    }
+
 }
