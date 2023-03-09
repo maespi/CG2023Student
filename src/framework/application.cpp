@@ -106,23 +106,26 @@ void Application::OnKeyPressed( SDL_KeyboardEvent event )
         case SDLK_6:
             opt = 6;
             break;
-        case SDLK_a:
+        case SDLK_q:
             opt = 7;
             break;
-        case SDLK_b:
+        case SDLK_w:
             opt = 8;
             break;
-        case SDLK_c:
+        case SDLK_e:
             opt = 9;
             break;
-        case SDLK_d:
+        case SDLK_r:
             opt = 10;
             break;
-        case SDLK_e:
+        case SDLK_t:
             opt = 11;
             break;
-        case SDLK_f:
+        case SDLK_y:
             opt = 12;
+            break;
+        case SDLK_u:
+            opt = 13;
             break;
     }
 }
