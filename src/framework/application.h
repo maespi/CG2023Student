@@ -60,4 +60,15 @@ public:
         SDL_GetWindowSize(window,&w,&h);
         return Vector2(float(w), float(h));
     }
+
+    //Lab3 variables
+    int type_c;
+    Camera c;
+
+    //Lab4 variables
+    Texture* texture;
+    Shader* shader;
+    Mesh* quad_mesh;
+    int opt;
+
 };

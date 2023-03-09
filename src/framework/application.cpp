@@ -3,29 +3,6 @@
 #include "shader.h"
 #include "utils.h"
 
-//Lab4 declarations:
-
-int mode;
-int opt = 1;
-Mesh* quad_mesh = new Mesh();
-Mesh mesh;
-
-Shader* shader;
-Shader* shader2;
-
-Texture* texture = new Texture();
-
-
-
-
-//Camera and lab3 variables:
-Camera c;
-int type_c = -1;
-Vector3 lukat_x = Vector3(0, 0, 1);
-float near_f = 0;
-float far_f = 0;
-float near_p = 0;
-float far_p = 0;
 
 
 Application::Application(const char* caption, int width, int height)
@@ -43,6 +20,11 @@ Application::Application(const char* caption, int width, int height)
 
     this->framebuffer.Resize(w, h);
 
+    //Initialization lab vars
+    type_c = -1;
+    texture = new Texture();
+    quad_mesh = new Mesh();
+    opt = 1;
 }
 
 Application::~Application()
@@ -57,7 +39,7 @@ void Application::Init(void)
     //camera inits
     c = Camera();
     c.SetPerspective(45, 1, .01, 100);
-    c.LookAt(lukat_x, Vector3(near_f, 0, 0), Vector3::UP);
+    c.LookAt( Vector3(0, 0, 1), Vector3(0, 0, 0), Vector3::UP);
     
     //Lab4 inits
     texture->Load("images/fruits.png", true);
@@ -71,34 +53,22 @@ void Application::Init(void)
 
 void Application::Render(void){
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-    
+    float asp = (float)framebuffer.width / (float)framebuffer.height;
     
     shader = Shader::Get("shaders/quad.vs", "shaders/quad.fs");
-
-
-    
     shader->Enable();
     
-    float asp = (float)framebuffer.width/(float)framebuffer.height;
     shader->SetFloat("aspect_ratio", asp);
     shader->SetFloat("center_y", ((float)framebuffer.height/2));
     shader->SetFloat("center_x", ((float)framebuffer.width/2));
     shader->SetFloat("width", ((float)framebuffer.width));
-    shader->SetFloat("height", ((float)framebuffer.height));
-
-                     
-
-                     
-
+    shader->SetFloat("height", ((float)framebuffer.height));    
     shader->SetFloat("time", time);
     shader->SetUniform1("opt", opt);
-
-    
 
     quad_mesh->Render();
 
     shader->Disable();
-    
 }
 // Called after render
 void Application::Update(float seconds_elapsed){
