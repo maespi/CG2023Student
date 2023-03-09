@@ -71,7 +71,9 @@ public:
     //Lab4 variables
     Texture* texture;
     Shader* shader;
+    Shader* shader_img;
     Mesh* quad_mesh;
     int opt;
+    
 
 };
