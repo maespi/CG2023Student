@@ -8,6 +8,9 @@
 #include "framework.h"
 #include "image.h"
 #include "Entity.h"
+#include "mesh.h"
+#include "shader.h"
+#include "utils.h"
 
 class Application
 {

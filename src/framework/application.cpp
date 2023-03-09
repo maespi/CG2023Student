@@ -45,7 +45,6 @@ void Application::Init(void)
     texture->Load("images/fruits.png", true);
     //shader = Shader::Get("shaders/quad.vs", "shaders/quad.fs");
 
-    
     quad_mesh->CreateQuad();
     
 }
