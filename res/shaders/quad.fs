@@ -100,7 +100,7 @@ void main()
         gl_FragColor = newColor;
         
     }//ex 3.2 - original photo
-    else if(opt == 7){
+    else if(opt == 7){//q
         gl_FragColor = texture_basic;
         
     }//ex 3.2.a - grayscale
@@ -167,6 +167,44 @@ void main()
         vec4 diff = vec4(color, 1.0);
         
         gl_FragColor = texture_basic * diff;
-    }
+        
+    }//ex 3.3.a - rotate and move unidirectional
+    else if (opt == 14){//a
+        
+        float rotationAngle = 180.0;
+
+        // Get the original texture coordinates
+        vec2 textureCoords = v_uv;
+
+        // Rotation transformation
+        mat2 rotationMatrix = mat2(cos(rotationAngle), -sin(rotationAngle) - time * 0.00009,-sin(rotationAngle), cos(rotationAngle) + time * 0.00001);
+        textureCoords = rotationMatrix * (textureCoords - vec2(center_x, center_y)) + vec2(center_x, center_y);
+
+        // Wrap the texture coordinates using the fract function
+        textureCoords = fract(textureCoords);
+
+        // Sample the texture using clamp_to_edge wrap mode
+        vec4 textureColor = texture2D(u_texture, textureCoords);
+
+        gl_FragColor = textureColor;
+
+
+
+        
+    }//ex 3.3.b - pixelation
+    else if (opt == 15) { // Pixelation transformation
+        int pixelSize = 50;
+
+        // Calculate the size of each pixel block
+        vec2 blockSize = vec2(1.0 / float (pixelSize));
+
+        // Calculate the pixelated texture coordinates by rounding to the nearest pixel block
+        vec2 pixelatedCoords = floor(v_uv.xy / blockSize) * blockSize;
+
+        // Sample the texture using clamp_to_edge wrap mode
+        vec4 color = texture2D(u_texture, pixelatedCoords);
+        gl_FragColor = color;
+        
+        }
     
 }

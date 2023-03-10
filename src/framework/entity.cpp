@@ -50,6 +50,10 @@ Entity::Entity(Mesh* m, Image* texture, eRenderMode mod) {
 Entity::~Entity() {
 }
 
+void Entity::Render() {
+    mesh->Render();
+}
+
 //Render function to render mesh object
 void Entity::Render(Image* framebuffer, Camera* camera, const Color& c, FloatImage* zBuffer) {
 

@@ -25,6 +25,7 @@ Application::Application(const char* caption, int width, int height)
     texture = new Texture();
     quad_mesh = new Mesh();
     opt = 1;
+
 }
 
 Application::~Application()
@@ -55,31 +56,22 @@ void Application::Render(void){
     
     shader = Shader::Get("shaders/quad.vs", "shaders/quad.fs");
     
-    shader_img = Shader::Get("shaders/simple.vs", "shaders/simple.fs");
     
-    if(opt<13){
-        shader->Enable();
-        
-        shader->SetFloat("aspect_ratio", asp);
-        shader->SetFloat("center_y", ((float)framebuffer.height/2));
-        shader->SetFloat("center_x", ((float)framebuffer.width/2));
-        shader->SetFloat("width", ((float)framebuffer.width));
-        shader->SetFloat("height", ((float)framebuffer.height));
-        shader->SetFloat("time", time);
-        shader->SetUniform1("opt", opt);
-        shader->SetTexture("u_texture", texture);
+    shader->Enable();
+    
+    shader->SetFloat("aspect_ratio", asp);
+    shader->SetFloat("center_y", ((float)framebuffer.height/2));
+    shader->SetFloat("center_x", ((float)framebuffer.width/2));
+    shader->SetFloat("width", ((float)framebuffer.width));
+    shader->SetFloat("height", ((float)framebuffer.height));
+    shader->SetFloat("time", time);
+    shader->SetUniform1("opt", opt);
+    shader->SetTexture("u_texture", texture);
 
-        quad_mesh->Render();
+    quad_mesh->Render();
 
-        shader->Disable();
-    }else{
-        shader_img->Enable();
-        
-        quad_mesh->Render();
-        
-        shader_img->Disable();
-        
-    }
+    shader->Disable();
+    
     
 }
 // Called after render
@@ -141,7 +133,10 @@ void Application::OnKeyPressed( SDL_KeyboardEvent event )
             opt = 13;
             break;
         case SDLK_a:
-            
+            opt = 14;
+            break;
+        case SDLK_s:
+            opt = 15;
             break;
     }
 }

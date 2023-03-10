@@ -52,5 +52,6 @@ public:
 	//Render Function
     void Render(Image* framebuffer, Camera* camera, const Color& c, FloatImage* zBuffer);
     void Update(float sec, int type);
+    void Render();
 };
 
