@@ -7,14 +7,20 @@
 #include "main/includes.h"
 #include "framework.h"
 #include "image.h"
-#include "Entity.h"
+#include "entity.h"
 #include "mesh.h"
 #include "shader.h"
 #include "utils.h"
+#include "Light.hpp"
+#include "Material.hpp"
 
 class Application
 {
 public:
+    
+    Entity* entities;
+    Light* lights;
+    float ambient_intensity;
 
     // Window
 
@@ -67,11 +73,5 @@ public:
     //Lab3 variables
     int type_c;
     Camera c;
-
-    //Lab4 variables
-    Texture* texture;
-    Shader* shader;
-    Mesh* quad_mesh;
-    int opt;
 
 };

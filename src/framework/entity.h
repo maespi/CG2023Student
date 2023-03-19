@@ -1,6 +1,7 @@
 #pragma once
 #include "mesh.h"
 #include "image.h"
+#include "Material.hpp"
 
 #define NORMAL_REND_TYPE 06440
 #define ZBUFFER_REND_TYPE 06450
@@ -21,9 +22,8 @@ class Entity
 public:
 	Mesh* mesh;
 	Matrix44 model;
-    Image* texture;
-	bool occlusion;
-
+    Material material;
+    
 	//Var to identify renderization form
 	eRenderMode rMode;
 
