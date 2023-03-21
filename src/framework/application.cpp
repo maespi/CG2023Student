@@ -2,8 +2,8 @@
 #include "mesh.h"
 #include "shader.h"
 #include "utils.h"
-#include "Material.hpp"
-#include "Light.hpp"
+#include "material.h"
+#include "light.h"
 
 
 
@@ -37,7 +37,9 @@ void Application::Init(void)
     c = Camera();
     c.SetPerspective(45, 1, .01, 100);
     c.LookAt( Vector3(0, 0, 1), Vector3(0, 0, 0), Vector3::UP);
-    
+    uniformData.vpMatrix = c.GetViewProjectionMatrix();
+    uniformData.intensity = ambient_intensity;
+    uniformData.sceneLight1.light = *lights;
     
 }
 

@@ -9,16 +9,14 @@ Entity::Entity() {
 	mesh = new Mesh();
     model.SetIdentity();
 	rMode = eRenderMode::WIREFRAME;
-    texture = NULL;
-    occlusion = false;
+    material = Material();
 }
 
 Entity::Entity(Mesh * m) {
 	mesh = m;
     model.SetIdentity();
 	rMode = eRenderMode::WIREFRAME;
-    texture = NULL;
-    occlusion = false;
+    material = Material();
 }
 
 Entity::Entity(const char* dir) {
@@ -26,24 +24,23 @@ Entity::Entity(const char* dir) {
 	mesh->LoadOBJ(dir);
     model.SetIdentity();
 	rMode = eRenderMode::WIREFRAME;
-    texture = NULL;
-    occlusion = false;
+    material = Material();
 }
 
-Entity::Entity(Mesh* m, Image* texture) {
+Entity::Entity(Mesh* m, Texture texture) {
     mesh = m;
     model.SetIdentity();
     rMode = eRenderMode::WIREFRAME;
-    this->texture = texture;
-    occlusion = false;
+    material = Material();
+    setTexture(texture);
 }
 
-Entity::Entity(Mesh* m, Image* texture, eRenderMode mod) {
+Entity::Entity(Mesh* m, Texture texture, eRenderMode mod) {
     mesh = m;
     model.SetIdentity();
     rMode = mod;
-    this->texture = texture;
-    occlusion = false;
+    material = Material();
+    setTexture(texture);
 }
 
 //Destructor
@@ -52,6 +49,12 @@ Entity::~Entity() {
 
 void Entity::Render() {
     mesh->Render();
+}
+
+//Lab5 render
+void Entity::Render(Material::sUniformData uniformData) {
+    uniformData.modelMatrix = model;
+    //material enable?
 }
 
 //Render function to render mesh object

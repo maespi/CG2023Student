@@ -11,8 +11,8 @@
 #include "mesh.h"
 #include "shader.h"
 #include "utils.h"
-#include "Light.hpp"
-#include "Material.hpp"
+#include "light.h"
+#include "material.h"
 
 class Application
 {
@@ -73,5 +73,8 @@ public:
     //Lab3 variables
     int type_c;
     Camera c;
+    //Lab5 variables
+    Material::sUniformDara uniformData;
+
 
 };

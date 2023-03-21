@@ -33,9 +33,7 @@ class Image
 
     struct imageCell {//Struct to save min and max X value of triangle line
         int minX = INT_MAX;
-        int maxX = INT_MIN;
-   
-         
+        int maxX = INT_MIN;      
     };
 
 public:
